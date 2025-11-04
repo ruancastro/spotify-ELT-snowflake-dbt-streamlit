@@ -2,7 +2,7 @@
 from os import getenv
 import base64
 import requests
-from utils.env import load_env
+from utils.load_env import load_env
 
 class TokenManager:
     """Class to manage Spotify API tokens."""
