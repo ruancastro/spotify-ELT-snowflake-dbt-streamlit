@@ -6,6 +6,7 @@ Cloud Function HTTP entrypoint that runs the Artist Pulse ingestion job.
 
 from datetime import datetime
 from zoneinfo import ZoneInfo
+import json
 
 from extract.fetch_christmas_artists import ChristmasArtistsExtractor
 from load.upload_gcs import upload_to_gcs
@@ -52,22 +53,37 @@ def artist_pulse_job(request):
 
     try:
         data = extractor.extract(snapshot_date)
-        filename = f"bronze/artists/{snapshot_date}/snapshot.json"
 
+        artists = data.get("artists", [])
+        tracks = data.get("tracks", [])
+
+        artists_filename = f"bronze/artists/{snapshot_date}/snapshot.json"
+        tracks_filename = f"bronze/tracks/{snapshot_date}/snapshot.json"
         # Log small summary so variables are used (avoids unused-variable warnings)
         logger.info(
             "Extracted %d artists and %d tracks",
-            len(data.get("artists", [])),
-            len(data.get("tracks", [])),
+            len(artists),
+            len(tracks),
         )
 
-        # upload_to_gcs(
-        #     data=json.dumps(data, ensure_ascii=False, indent=2),
-        #     bucket_name="your-spotify-raw-bucket",
-        #     destination_blob_name=filename,
-        # )
-        # logger.info("Snapshot saved in gs://your-spotify-raw-bucket/%s", filename)
-        return "Artist Pulse ingested!", 200
+        upload_to_gcs(
+            data=json.dumps(artists, ensure_ascii=False, indent=2),
+            destination_blob_name=artists_filename,
+        )
+        logger.info(
+            "Snapshot saved in gs://spotify-christmas-artists-raw/%s", artists_filename
+        )
+
+        upload_to_gcs(
+            data=json.dumps(tracks, ensure_ascii=False, indent=2),
+            destination_blob_name=tracks_filename,
+        )
+
+        logger.info(
+            "Snapshot saved in gs://spotify-christmas-artists-raw/%s", artists_filename
+        )
+
+        return "Artists/Tracks Pulse ingested!", 200
     except (ValueError, RuntimeError, OSError) as e:
         logger.error("Job error: %s", e, exc_info=True)
         return "Error", 500
