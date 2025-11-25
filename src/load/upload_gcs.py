@@ -42,7 +42,7 @@ def upload_to_gcs(
     if not target_bucket:
         raise ValueError("GCS bucket name is required (check GCS_BUCKET config).")
 
-    client = storage.Client()
+    client = storage.Client()  # Usa as Application Default Credentials
     bucket = client.bucket(target_bucket)
     blob = bucket.blob(destination_blob_name)
 

@@ -70,17 +70,10 @@ def artist_pulse_job(request):
             data=json.dumps(artists, ensure_ascii=False, indent=2),
             destination_blob_name=artists_filename,
         )
-        logger.info(
-            "Snapshot saved in gs://spotify-christmas-artists-raw/%s", artists_filename
-        )
 
         upload_to_gcs(
             data=json.dumps(tracks, ensure_ascii=False, indent=2),
             destination_blob_name=tracks_filename,
-        )
-
-        logger.info(
-            "Snapshot saved in gs://spotify-christmas-artists-raw/%s", artists_filename
         )
 
         return "Artists/Tracks Pulse ingested!", 200
