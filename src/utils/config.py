@@ -15,7 +15,7 @@ from google.auth.exceptions import DefaultCredentialsError
 from google.cloud import secretmanager
 
 # Local
-from utils.logger import get_logger
+from .logger import get_logger
 
 
 load_dotenv()
@@ -64,9 +64,9 @@ def get_secret(secret_id: str, version: str = "latest") -> Optional[str]:
 
 # === Load secrets  ===
 if not SPOTIFY_CLIENT_ID:
-    SPOTIFY_CLIENT_ID = get_secret("spotify-client-id")
+    SPOTIFY_CLIENT_ID = get_secret("SPOTIFY_CLIENT_ID")
 if not SPOTIFY_CLIENT_SECRET:
-    SPOTIFY_CLIENT_SECRET = get_secret("spotify-client-secret")
+    SPOTIFY_CLIENT_SECRET = get_secret("SPOTIFY_CLIENT_SECRET")
 
 # === Final validation ===
 if not SPOTIFY_CLIENT_ID or not SPOTIFY_CLIENT_SECRET:
