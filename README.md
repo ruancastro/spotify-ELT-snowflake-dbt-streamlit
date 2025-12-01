@@ -1,4 +1,4 @@
-# 🎧 Spotify ETL Pipeline — Databricks + GCP
+# 🎧 Spotify ELT Data Pipeline — GCP + Snowflake + dbt + Streamlit
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
@@ -8,83 +8,127 @@
 ---
 
 ## 📖 Overview
-This project demonstrates a **complete ETL pipeline** using **Databricks** and **Google Cloud Platform (GCP)** to extract, transform, and load data from the **Spotify API** into a structured data lake architecture (Bronze → Silver → Gold).
+This project implements a modern cloud-native data pipeline that extracts daily artist insights from the Spotify Web API, stores raw JSON data in Google Cloud Storage (GCS), transforms it into analytics-ready tables using Snowflake + dbt, and finally exposes insights through a Streamlit dashboard.
 
-It was built to showcase data engineering best practices, including orchestration, incremental updates, and schema evolution.
+- The pipeline showcases real-world engineering practices:
+- serverless ingestion (Cloud Run Jobs)
+- CI/CD-based orchestration (GitHub Actions)
+- ELT modeling with dbt (bronze → silver → gold)
+- analytics on Snowflake
+- interactive visualization with Streamlit
 
 ---
 
 ## ⚙️ Tech Stack
-- **Databricks** – Orchestration and transformations
-- **Apache Spark (PySpark)** – Data processing
-- **Google Cloud Storage (GCS)** – Raw and curated data layers
-- **BigQuery** – Analytics-ready data
-- **Spotify API** – Data source
-- **Cloud Run + Cloud Scheduler (GCP)** – Automated daily ingestion triggers
+### Ingestion & Orchestration
+- **GitHub Actions** – scheduled automation + CI/CD
+- **Cloud Run Jobs** – serverless batch ingestion (Python)
+
+### Storage & Warehouse
+- **Google Cloud Storage (GCS)** – raw/bronze snapshots
+- **Snowflake** – silver and gold analytical layers
+
+### Transformation
+- **dbt Core** — SQL models, lineage, tests, documentation
+
+### Visualization
+- **Streamlit** — interactive dashboard powered by Snowflake queries
+
+### Data Source
+- **Spotify API** – artists, popularity, genres, and top tracks
 
 ---
 
 ## 🧩 Architecture
 ```
-                    +----------------------+
-                    |   Cloud Scheduler     |
-                    | (Daily trigger)       |
-                    +----------+------------+
-                               |
-                               v
-                    +----------------------+
-                    |     Cloud Run         |
-                    | (Runs ETL script)     |
-                    +----------+------------+
-                               |
-                               v
-                    +----------------------+
-                    |   Spotify API         |
-                    | (Data source)         |
-                    +----------+------------+
-                               |
-                               v
-                    +----------------------+
-                    |  Google Cloud Storage |
-                    | (Bronze Layer - Raw)  |
-                    +----------+------------+
-                               |
-                               v
-                    +----------------------+
-                    |     Databricks        |
-                    | (Silver/Gold Layers)  |
-                    | Transformations + Job |
-                    +----------+------------+
-                               |
-                               v
-                    +----------------------+
-                    |     BigQuery          |
-                    | (Analytics / BI)      |
-                    +----------------------+
+                ┌────────────────────────────┐
+                │        GitHub Actions      │
+                │   Daily orchestration      │
+                └──────────────┬─────────────┘
+                               │
+                         (cron trigger)
+                               │
+                               ▼
+                ┌────────────────────────────┐
+                │       Cloud Run Job        │
+                │   Python ingestion script  │
+                └──────────────┬─────────────┘
+                               │
+                               ▼
+                ┌────────────────────────────┐
+                │ Google Cloud Storage (GCS) │
+                │    Bronze - Raw JSON       │
+                └──────────────┬─────────────┘
+                               │
+                               ▼
+                ┌────────────────────────────┐
+                │       Snowflake + dbt      │
+                │ Bronze → Silver → Gold     │
+                │ Trend metrics & cleansing  │
+                └──────────────┬─────────────┘
+                               │
+                               ▼
+                ┌────────────────────────────┐
+                │        Streamlit App       │
+                │   Analytics & Visuals      │
+                └────────────────────────────┘
+
 ```
 
 ---
 
-## 🚀 Automation on GCP
+## 🚀 Pipeline Automation (GitHub Actions)
 
-The ingestion process runs automatically using **Cloud Scheduler** and **Cloud Run**:
+This project uses two separate workflows for simplicity, modularity, and observability.
 
-1. **Cloud Scheduler** triggers a **HTTP request** daily.
-2. The request hits a **Cloud Run** endpoint hosting a lightweight Python API.
-3. This API executes the **Spotify ETL extraction**, writing new data to the **Bronze Layer** (GCS).
-4. Once the raw data is updated, a **Databricks Job** is triggered for further transformation and loading into **Silver** and **Gold** tables.
+1️⃣ Daily Ingestion Workflow (Ingest Spotify → GCS)
+- Scheduled via GitHub Actions cron
+- Executes the Cloud Run Job
+- Cloud Run Job runs a Python container:
+- calls the Spotify API
+- extracts artist & track data
+- writes bronze snapshots to GCS
 
-This setup allows full automation with minimal cost (below R$5/month).
+Snapshot folder structure:\
+`gs://<bucket>/bronze/artists/YYYY-MM-DD/snapshot.json`\
+`gs://<bucket>/bronze/tracks/YYYY-MM-DD/snapshot.json`
+
+
+2️⃣ Daily Transformation Workflow (dbt → Snowflake)
+GitHub Actions runs:
+- dbt deps
+- dbt run (bronze → silver → gold)
+- dbt test
+
+
+The Snowflake pipeline creates:
+- Silver: cleaned artist & track tables
+- Gold: metrics for:
+- popularity evolution
+- top artists of the season
+- christmas trend analysis (Nov–Dec)
+- ranking + KPIs
 
 ---
 
 ## 📊 Data Flow Summary
-1. **Extract:** Spotify API → Cloud Run
-2. **Load (Raw):** Cloud Run → GCS (Bronze)
-3. **Transform:** Databricks → Silver/Gold layers
-4. **Analyze:** BigQuery / Power BI
+1. **Extract:** Spotify → Cloud Run Jobs → Python ingestion
+2. **Load (Raw):** Python → GCS (Raw JSON)
+3. **Transform:** dbt on Snowflake → normalization/cleansing/enrichment/business metrics
+4. **Visualize:** Streamlit webapp reading from Snowflake
 
 ---
+
+## 📚 Project Goals
+
+This project demonstrates:
+
+- serverless batch ingestion on GCP
+- modern ELT workflow using Snowflake + dbt
+- CI/CD-driven orchestration
+- data modeling best practices (bronze → silver → gold)
+- dashboarding with Streamlit
+- A complete, production-inspired data engineering pipeline.
 
 ## 📜 License
 This project is licensed under the [MIT License](LICENSE).
