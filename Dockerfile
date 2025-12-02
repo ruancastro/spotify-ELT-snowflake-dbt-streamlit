@@ -1,16 +1,18 @@
 FROM python:3.10-slim
 
+# Ensure Python output is not buffered (better logging)
 ENV PYTHONUNBUFFERED=1 \
     PIP_NO_CACHE_DIR=1
 
+# Create and set working directory
 WORKDIR /app
 
+# Install Python dependencies
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install -r requirements.txt
-
+# Copy project files
 COPY . .
 
-ENV PORT=8080
-
-CMD ["gunicorn", "src.app:app", "--bind", "0.0.0.0:8080", "--workers", "1", "--threads", "4"]
+# ENTRYPOINT simply runs the batch job
+ENTRYPOINT ["python", "src/main.py"]
