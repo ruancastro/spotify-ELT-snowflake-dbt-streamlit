@@ -16,31 +16,25 @@ from utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-def artist_pulse_job(request):
+def artist_pulse_job():
     """
-    Cloud Function HTTP entrypoint that runs the Artist Pulse ingestion job.
-    This function computes a snapshot date in the "America/Sao_Paulo" timezone,
-    instantiates a ChristmasArtistsExtractor to extract artist data for that
-    snapshot date, and prepares a destination filename for a JSON snapshot
-    (e.g. "bronze/artists/YYYY-MM-DD/snapshot.json"). The function currently
-    contains commented logic to upload the snapshot to Google Cloud Storage.
-    Success and error conditions are logged.
-    Args:
-        request (flask.Request): The incoming HTTP request object provided by
-            Cloud Functions. The request body/parameters are not used by this
-            function; it acts as a trigger to run the ingestion job.
-    Returns:
-        tuple[str, int]: A tuple with a response message and an HTTP status code.
-            - On success: ("Artist Pulse ingested!", 200)
-            - On failure: ("Error", 500) after logging the exception.
-    Raises:
-        None: Exceptions raised during extraction are caught and logged inside
-        the function; they result in a 500 response and are not propagated.
-    Side Effects:
-        - Calls ChristmasArtistsExtractor.extract(snapshot_date).
-        - Constructs a GCS destination filename for the snapshot.
-        - May upload a JSON snapshot to Google Cloud Storage if upload logic is enabled.
-        - Emits informational and error logs via the configured logger.
+    Cloud Run Job entrypoint that runs the Artist Pulse ingestion job.
+
+     Intended to be executed as a Cloud Run Job (non-HTTP). Computes a snapshot
+     date in the "America/Sao_Paulo" timezone, runs the extraction for that date
+     via ChristmasArtistsExtractor.extract(snapshot_date), and uploads JSON
+     snapshots for artists and tracks to Google Cloud Storage using upload_to_gcs.
+
+     Notes:
+     - This function is NOT an HTTP handler and does not accept a request object.
+     - Returns a (message, int) tuple for local/testing convenience. Cloud Run Jobs
+       rely on the container exit code rather than an HTTP response.
+     - Exceptions are caught and logged; on error the function returns an error
+       tuple and logs the stack trace.
+
+     Side effects:
+     - Calls ChristmasArtistsExtractor.extract(snapshot_date).
+     - Uploads two JSON files to GCS (artists and tracks).
     """
     snapshot_date = datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%Y-%m-%d")
 
@@ -83,4 +77,4 @@ def artist_pulse_job(request):
 
 
 if __name__ == "__main__":
-    artist_pulse_job(None)
+    artist_pulse_job()
