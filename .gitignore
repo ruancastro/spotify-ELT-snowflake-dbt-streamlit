@@ -4,3 +4,4 @@ __pycache__/
 .venv/
 .pre-commit-config.yaml
 .cache
+internal_docs.md
