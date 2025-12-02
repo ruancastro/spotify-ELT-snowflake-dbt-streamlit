@@ -40,11 +40,6 @@ def artist_pulse_job():
 
     extractor = ChristmasArtistsExtractor()
 
-    if request:
-        logger.debug(
-            "Triggered by request method: %s", getattr(request, "method", None)
-        )
-
     try:
         data = extractor.extract(snapshot_date)
 
