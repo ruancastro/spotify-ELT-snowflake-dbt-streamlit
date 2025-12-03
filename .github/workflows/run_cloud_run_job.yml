@@ -2,7 +2,7 @@ name: Run Artist Pulse Job Daily
 
 on:
   schedule:
-    - cron: "0 13 * * *"
+    - cron: "0 9 * * *" # Runs daily at 06:00 GMT-3 
   workflow_dispatch:
 
 jobs:
