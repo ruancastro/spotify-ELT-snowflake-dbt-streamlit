@@ -10,7 +10,20 @@
 ## 📖 Overview
 
 > **Note on Architecture Decision**
-> While the standard warehouse pattern keeps *Silver* and *Gold* inside Snowflake, in this project Snowflake is intentionally used **only as the compute engine** for transformations. All data layers — including normalized Silver and analytical Gold — are exported and persisted in **Google Cloud Storage (GCS)** in Parquet format. This ensures long‑term ownership of the data, independence from temporary Snowflake access, and full portability to other engines (BigQuery, DuckDB, Polars, Databricks), while still leveraging Snowflake's powerful compute for ELT.
+> While classical medallion architecture keeps all layers (Bronze, Silver, Gold) fully inside the data warehouse, this project adopts a hybrid warehouse pattern.
+Snowflake now acts as the primary data warehouse, hosting:
+>- Bronze — semi-structured raw tables loaded from GCS
+>- Silver — cleaned and normalized entities
+>- Gold — analytical & metric tables 
+
+>At the same time, all three layers are also exported back to Google Cloud Storage (GCS) in Parquet format as a resilience and longevity strategy.
+This dual-storage approach provides:
+>- Full analytics power inside Snowflake (warehouse, compute, SQL, dbt modeling)
+>- Long-term data ownership in GCS, even if Snowflake access becomes temporary
+>- Portability to migrate the project in the future to BigQuery, DuckDB, Databricks, or Polars
+>- Decoupling between compute (Snowflake) and durable storage (GCS)
+
+
 
 This project implements a modern cloud-native data pipeline that extracts daily artist insights from the Spotify Web API, stores raw JSON data in Google Cloud Storage (GCS), transforms it into analytics-ready tables using Snowflake + dbt, and finally exposes insights through a Streamlit dashboard.
 
