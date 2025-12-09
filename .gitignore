@@ -6,3 +6,4 @@ __pycache__/
 .cache
 internal_docs.md
 tree.csv
+logs/dbt.log
