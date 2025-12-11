@@ -6,12 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
+
   run-dbt-bronze:
     name: Run DBT Bronze Models
     runs-on: ubuntu-latest
 
     env:
-      DBT_PROFILES_DIR: ./
+      DBT_PROFILES_DIR: ./dbt       # important: profiles.yml inside dbt directory
       SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
       SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
       SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
@@ -34,9 +35,12 @@ jobs:
 
       - name: Show dbt version
         run: dbt --version
+        working-directory: ./dbt
 
       - name: Install dbt dependencies
         run: dbt deps
+        working-directory: ./dbt
 
       - name: Run Bronze models
         run: dbt run --select tag:BRONZE
+        working-directory: ./dbt
