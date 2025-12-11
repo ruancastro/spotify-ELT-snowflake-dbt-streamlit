@@ -1,0 +1,42 @@
+name: Run DBT Bronze Ingestion Daily
+
+on:
+  schedule:
+    - cron: "0 10 * * *"   # Runs daily at 10:00 UTC (07:00 GMT-3)
+  workflow_dispatch:
+
+jobs:
+  run-dbt-bronze:
+    name: Run DBT Bronze Models
+    runs-on: ubuntu-latest
+
+    env:
+      DBT_PROFILES_DIR: ./
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+      SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
+      SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+      SNOWFLAKE_DATABASE: SPOTIFY
+      SNOWFLAKE_SCHEMA: TRANSFORM
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt-snowflake
+        run: pip install dbt-snowflake
+
+      - name: Show dbt version
+        run: dbt --version
+
+      - name: Install dbt dependencies
+        run: dbt deps
+
+      - name: Run Bronze models
+        run: dbt run --select tag:BRONZE
