@@ -1,0 +1,49 @@
+version: 2
+
+models:
+  - name: artists_bronze
+    description: >
+      Bronze layer table containing raw artist records extracted from Google Cloud Storage.
+      Each file is ingested as a JSON VARIANT object, preserving its full structure.
+    config:
+      materialized: incremental
+      incremental_strategy: append
+      schema: BRONZE
+      tags: ["BRONZE"]
+
+    columns:
+      - name: record
+        description: "Raw JSON content from the artist file stored as a VARIANT column."
+        data_type: variant
+
+      - name: record_date
+        description: "Date extracted from the filename in the GCS path (YYYY-MM-DD)."
+        data_type: date
+
+      - name: ingested_at
+        description: "Timestamp indicating when the record was ingested by the dbt pipeline."
+        data_type: timestamp_ntz
+
+
+  - name: tracks_bronze
+    description: >
+      Bronze layer table containing raw track records extracted from Google Cloud Storage.
+      Files are loaded as JSON VARIANT objects to preserve the nested structure.
+    config:
+      materialized: incremental
+      incremental_strategy: append
+      schema: BRONZE
+      tags: ["BRONZE"]
+
+    columns:
+      - name: record
+        description: "Raw JSON content from the track file stored as a VARIANT column."
+        data_type: variant
+
+      - name: record_date
+        description: "Date extracted from the filename in the GCS path (YYYY-MM-DD)."
+        data_type: date
+
+      - name: ingested_at
+        description: "Timestamp indicating when the record was ingested by the dbt pipeline."
+        data_type: timestamp_ntz
