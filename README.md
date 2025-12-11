@@ -2,156 +2,155 @@
 
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Status](https://img.shields.io/badge/status-active-success.svg)
-![Built with](https://img.shields.io/badge/Built%20with-Databricks%20%2B%20GCP-blue)
+![Built with](https://img.shields.io/badge/Built%20with-GCP%20%2B%20Snowflake-blue)
 ![Data Engineering](https://img.shields.io/badge/domain-Data%20Engineering-orange.svg)
 
 ---
 
 ## 📖 Overview
 
-> **Note on Architecture Decision**
-> While classical medallion architecture keeps all layers (Bronze, Silver, Gold) fully inside the data warehouse, this project adopts a hybrid warehouse pattern.
-Snowflake now acts as the primary data warehouse, hosting:
->- Bronze — semi-structured raw tables loaded from GCS
->- Silver — cleaned and normalized entities
->- Gold — analytical & metric tables 
+> **Architecture Note**  
+> This project follows a **hybrid medallion architecture** where **Snowflake is the primary data warehouse**, responsible for storing and processing all curated layers — Bronze, Silver, and Gold.  
+>
+> The flow operates as follows:
+> - Raw JSON data lands first in **Google Cloud Storage (GCS)** as Bronze snapshots.
+> - Snowflake ingests these Bronze files and **materializes an incremental Bronze table**.
+> - dbt transforms Bronze → Silver → Gold **inside Snowflake**, where all curated data is stored and queried.
+> - Silver & Gold are also **exported to GCS (Parquet)** only as *resilient backups* and for future portability (BigQuery, DuckDB, Databricks, Polars, etc.).
+>
+> This ensures:
+> - **Full analytical power and long-term storage in Snowflake**  
+> - **Durable, portable backups in GCS**  
+> - A decoupled architecture where Snowflake is the warehouse and transformation engine, while GCS provides raw ingestion and long-term durability.
 
->At the same time, all three layers are also exported back to Google Cloud Storage (GCS) in Parquet format as a resilience and longevity strategy.
-This dual-storage approach provides:
->- Full analytics power inside Snowflake (warehouse, compute, SQL, dbt modeling)
->- Long-term data ownership in GCS, even if Snowflake access becomes temporary
->- Portability to migrate the project in the future to BigQuery, DuckDB, Databricks, or Polars
->- Decoupling between compute (Snowflake) and durable storage (GCS)
+This project implements a modern ELT pipeline that extracts daily artist insights from the Spotify API, stores raw JSON in GCS, transforms data in Snowflake using dbt, and exposes insights through a Streamlit dashboard.
 
+The pipeline includes:
 
-
-This project implements a modern cloud-native data pipeline that extracts daily artist insights from the Spotify Web API, stores raw JSON data in Google Cloud Storage (GCS), transforms it into analytics-ready tables using Snowflake + dbt, and finally exposes insights through a Streamlit dashboard.
-
-* The pipeline showcases real-world engineering practices:
-
-  * serverless ingestion (Cloud Run Jobs)
-  * CI/CD-based orchestration (GitHub Actions)
-  * ELT modeling with dbt (bronze → silver → gold)
-  * analytics on Snowflake
-  * interactive visualization with Streamlit
+- serverless ingestion (Cloud Run Jobs)
+- CI/CD orchestration (GitHub Actions)
+- ELT modeling with dbt (Bronze → Silver → Gold)
+- analytics stored and computed in Snowflake
+- visualization via Streamlit
 
 ---
 
 ## ⚙️ Tech Stack
 
 ### Ingestion & Orchestration
-
-* **GitHub Actions** – scheduled automation + CI/CD
-* **Cloud Run Jobs** – serverless batch ingestion (Python)
+* **GitHub Actions** – scheduled automation + CI/CD  
+* **Cloud Run Jobs** – serverless batch ingestion  
 
 ### Storage & Warehouse
-
-* **Google Cloud Storage (GCS)** – raw/bronze snapshots + persisted Silver & Gold layers (Parquet)
-* **Snowflake** – used as a **compute engine** for transformations
+* **Google Cloud Storage (GCS)**  
+  - Raw Bronze snapshots (JSON)  
+  - Backups of Snowflake Silver & Gold (Parquet)  
+* **Snowflake**  
+  - **Primary data warehouse**
+  - Hosts Bronze, Silver, Gold tables  
+  - dbt models run directly on Snowflake compute  
 
 ### Transformation
-
-* **dbt Core** — SQL models, lineage, tests, documentation
+* **dbt Core** — SQL models, lineage, tests, documentation  
 
 ### Visualization
-
-* **Streamlit** — interactive dashboard powered by Snowflake queries
+* **Streamlit** — dashboard powered by Snowflake queries  
 
 ### Data Source
-
-* **Spotify API** – artists, popularity, genres, and top tracks
+* **Spotify API** — artists, popularity, genres, tracks  
 
 ---
 
 ## 🧩 Architecture
 
-```
-                ┌────────────────────────────┐
-                │        GitHub Actions      │
-                │   Daily orchestration      │
-                └──────────────┬─────────────┘
-                               │
-                         (cron trigger)
-                               │
-                               ▼
-                ┌────────────────────────────┐
-                │       Cloud Run Job        │
-                │   Python ingestion script  │
-                └──────────────┬─────────────┘
-                               │
-                               ▼
-                ┌────────────────────────────┐
-                │ Google Cloud Storage (GCS) │
-                │ Bronze - Raw JSON          │
-                └──────────────┬─────────────┘
-                               │
-                               ▼
-                ┌────────────────────────────┐
-                │       Snowflake + dbt      │
-                │     Compute-only ELT       │
-                │ Bronze → Silver → Gold     │
-                └──────────────┬─────────────┘
-                               │ (export parquet)
-                               ▼
-                ┌────────────────────────────┐
-                │ Google Cloud Storage (GCS) │
-                │  Silver + Gold (Parquet)   │
-                └──────────────┬─────────────┘
-                               │
-                               ▼
-                ┌────────────────────────────┐
-                │        Streamlit App       │
-                │   Analytics & Visuals      │
-                └────────────────────────────┘
-```
+            ┌────────────────────────────┐
+            │        GitHub Actions      │
+            │   Daily orchestration      │
+            └──────────────┬─────────────┘
+                           │
+                     (cron trigger)
+                           │
+                           ▼
+            ┌────────────────────────────┐
+            │       Cloud Run Job        │
+            │   Python ingestion script  │
+            └──────────────┬─────────────┘
+                           │
+                           ▼
+            ┌────────────────────────────┐
+            │ Google Cloud Storage (GCS) │
+            │ Bronze - Raw JSON          │
+            └──────────────┬─────────────┘
+                           │
+                           ▼
+            ┌────────────────────────────────────┐
+            │        Snowflake + dbt             │
+            │ Primary Data Warehouse + ELT Engine│
+            │ Bronze → Silver → Gold             │
+            └──────────────┬─────────────────────┘
+                           │ (backup export)
+                           ▼
+            ┌────────────────────────────┐
+            │ Google Cloud Storage (GCS) │
+            │ Silver + Gold Backups      │
+            │ (Parquet for portability)  │
+            └──────────────┬─────────────┘
+                           │
+                           ▼
+            ┌────────────────────────────┐
+            │        Streamlit App       │
+            │   Analytics & Visuals      │
+            └────────────────────────────┘
+
 
 ---
 
 ## 🚀 Pipeline Automation (GitHub Actions)
 
-This project uses two separate workflows for simplicity, modularity, and observability.
+This project uses two workflows for modularity and clarity.
 
-### 1️⃣ Daily Ingestion Workflow (Ingest Spotify → GCS)
+---
 
-* Scheduled via GitHub Actions cron
-* Executes the Cloud Run Job
-* Cloud Run Job runs a Python container:
+### 1️⃣ Daily Ingestion Workflow (Spotify → GCS)
 
-  * calls the Spotify API
-  * extracts artist & track data
-  * writes bronze snapshots to GCS
+Runs on schedule via GitHub Actions:
 
-Snapshot folder structure:
-`gs://<bucket>/bronze/artists/YYYY-MM-DD/snapshot.json`
+- Executes Cloud Run Job
+- Cloud Run container:
+  - Calls Spotify API
+  - Extracts artist & track data
+  - Writes raw snapshots to GCS Bronze folder
+
+Example paths: \
+`gs://<bucket>/bronze/artists/YYYY-MM-DD/snapshot.json` \
 `gs://<bucket>/bronze/tracks/YYYY-MM-DD/snapshot.json`
+
+---
 
 ### 2️⃣ Daily Transformation Workflow (dbt → Snowflake)
 
-GitHub Actions runs:
+GitHub Actions executes:
 
-* dbt deps
-* dbt run (bronze → silver → gold)
-* dbt test
+- `dbt deps`
+- `dbt run`
+- `dbt test`
 
-The Snowflake pipeline creates:
+Snowflake produces:
 
-* **Silver:** cleaned artist & track tables
-* **Gold:** analytical metrics for:
-
-  * popularity evolution
-  * top artists of the season
-  * christmas trend analysis (Nov–Dec)
-  * ranking + KPIs
+- **Bronze**: incremental ingestion tables  
+- **Silver**: cleaned entities  
+- **Gold**: analytical aggregates and KPIs  
 
 ---
 
 ## 📊 Data Flow Summary
 
-1. **Extract:** Spotify → Cloud Run Jobs → Python ingestion
-2. **Load (Raw):** Python → GCS (Raw JSON)
-3. **Transform:** dbt on Snowflake → normalization, cleansing, enrichment, analytics
-4. **Persist:** Silver & Gold exported from Snowflake → GCS (Parquet)
-5. **Visualize:** Streamlit webapp reading from Snowflake
+1. **Extract:** Spotify → Cloud Run → GCS (raw JSON Bronze)
+2. **Load to Warehouse:** Snowflake loads Bronze snapshots
+3. **Transform:** dbt on Snowflake (Bronze → Silver → Gold)
+4. **Persist:** Silver & Gold **stored in Snowflake**
+5. **Backup:** Silver & Gold **exported to GCS (Parquet)**
+6. **Visualize:** Streamlit querying Snowflake
 
 ---
 
@@ -159,14 +158,14 @@ The Snowflake pipeline creates:
 
 This project demonstrates:
 
-* serverless batch ingestion on GCP
-* modern ELT workflow using Snowflake + dbt
-* CI/CD-driven orchestration
-* data modeling best practices (bronze → silver → gold + lakehouse export)
-* dashboarding with Streamlit
-* a complete, production-inspired data engineering pipeline with long-term data durability.
+- serverless ingestion on GCP  
+- ELT with Snowflake + dbt  
+- CI/CD-driven data workflows  
+- medallion architecture in a hybrid storage pattern  
+- dashboarding via Streamlit  
+- long-term data durability with cloud object storage backups  
 
 ---
 
 ## 📜 License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the **MIT License**.
