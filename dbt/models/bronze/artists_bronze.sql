@@ -1,8 +1,3 @@
-{{ config(
-    materialized = 'incremental',
-    incremental_strategy = 'append'
-) }}
-
 SELECT
     $1 AS record,
     REGEXP_SUBSTR(METADATA$FILENAME, '\\d{4}-\\d{2}-\\d{2}')::DATE AS record_date,
