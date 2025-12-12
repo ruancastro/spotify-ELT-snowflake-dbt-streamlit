@@ -1,0 +1,86 @@
+version: 2
+
+models:
+
+  - name: silver_artists_daily
+    description: >
+      Silver layer table containing daily consolidated artist records.
+      This table deduplicates Bronze data by ARTIST_ID and RECORD_DATE 
+      and extracts normalized attributes for analytical use.
+    config:
+      materialized: incremental
+      incremental_strategy: merge
+      unique_key: ["artist_id", "record_date"]
+      schema: SILVER
+      tags: ["SILVER"]
+
+    columns:
+      - name: artist_id
+        description: "Unique artist identifier from Spotify."
+        data_type: string
+        tests:
+          - not_null
+
+      - name: artist_name
+        description: "Official name of the artist."
+        data_type: string
+
+      - name: market
+        description: "Region/market associated with the artist."
+        data_type: string
+
+      - name: popularity
+        description: "Daily popularity score of the artist."
+        data_type: integer
+
+      - name: followers
+        description: "Follower count captured for the artist on the given date."
+        data_type: integer
+
+      - name: record_date
+        description: "Date representing the ingestion snapshot."
+        data_type: date
+        tests:
+          - not_null
+
+
+  - name: silver_tracks_daily
+    description: >
+      Silver layer table containing daily consolidated track records.
+      This table deduplicates Bronze data by TRACK_ID and RECORD_DATE 
+      and normalizes attributes for downstream analytical models.
+    config:
+      materialized: incremental
+      incremental_strategy: merge
+      unique_key: ["track_id", "record_date"]
+      schema: SILVER
+      tags: ["SILVER"]
+
+    columns:
+      - name: track_id
+        description: "Unique track identifier from Spotify."
+        data_type: string
+        tests:
+          - not_null
+
+      - name: track_name
+        description: "Name of the track."
+        data_type: string
+
+      - name: artist_id
+        description: "Identifier linking the track to its artist."
+        data_type: string
+
+      - name: popularity
+        description: "Daily popularity score of the track."
+        data_type: integer
+
+      - name: release_date
+        description: "Original release date of the track."
+        data_type: date
+
+      - name: record_date
+        description: "Date representing the ingestion snapshot."
+        data_type: date
+        tests:
+          - not_null
