@@ -1,0 +1,45 @@
+version: 2
+
+sources:
+  - name: transform_bronze
+    description: >
+      Source schema containing raw JSON data extracted from Google Cloud Storage 
+      and loaded into Snowflake. This layer represents the Bronze stage of the pipeline,
+      storing data exactly as ingested, without transformations.
+    database: SPOTIFY
+    schema: TRANSFORM_BRONZE
+
+    tables:
+      - name: artists_bronze
+        description: >
+          Raw Bronze table containing artist metadata records extracted from Spotify.
+          Each row stores a VARIANT JSON object preserving all nested fields from ingestion.
+        columns:
+          - name: record
+            description: "Raw JSON document for each artist."
+            data_type: variant
+
+          - name: record_date
+            description: "Date extracted from the file path (YYYY-MM-DD)."
+            data_type: date
+
+          - name: ingested_at
+            description: "Timestamp of when the record was ingested into Snowflake."
+            data_type: timestamp_ntz
+
+      - name: tracks_bronze
+        description: >
+          Raw Bronze table containing track metadata records from Spotify.
+          Each row consists of a VARIANT JSON document representing a track structure as received.
+        columns:
+          - name: record
+            description: "Raw JSON document for each track."
+            data_type: variant
+
+          - name: record_date
+            description: "Date extracted from the file path (YYYY-MM-DD)."
+            data_type: date
+
+          - name: ingested_at
+            description: "Timestamp of when the record was ingested into Snowflake."
+            data_type: timestamp_ntz
