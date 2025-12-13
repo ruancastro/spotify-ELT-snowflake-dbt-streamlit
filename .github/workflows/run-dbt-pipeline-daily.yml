@@ -1,4 +1,4 @@
-name: Run DBT Bronze Ingestion Daily
+name: Run DBT Pipeline Daily (Bronze → Silver → Gold)
 
 on:
   schedule:
@@ -61,4 +61,12 @@ jobs:
 
       - name: Run Bronze models
         run: dbt run --select tag:BRONZE
+        working-directory: ./dbt
+      
+      - name: Run Silver models
+        run: dbt run --select tag:SILVER
+        working-directory: ./dbt
+
+      - name: Run Gold models
+        run: dbt run --select tag:GOLD
         working-directory: ./dbt
