@@ -35,6 +35,21 @@ The pipeline includes:
 
 ---
 
+## 🎄 Dataset Scope
+
+This project tracks **Christmas-related Spotify artists and their top tracks** during the **2025 holiday season**, focusing on the period from **November to December 2025**.
+
+The dataset includes:
+
+- A curated list of **globally and Brazil-relevant Christmas artists**
+- Daily snapshots of:
+  - artist popularity and follower counts
+  - top tracks per artist
+  - track popularity evolution over time
+- Historical tracking to capture **seasonality and popularity spikes** as Christmas approaches
+
+The goal is to analyze how Christmas music consumption evolves over time, compare markets (Global vs Brazil), and identify the most dominant artists and tracks during the holiday season.
+
 ## ⚙️ Tech Stack
 
 ### Ingestion & Orchestration
