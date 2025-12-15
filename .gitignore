@@ -16,3 +16,4 @@ logs/
 .env
 .venv/
 
+snowflake.env
