@@ -70,6 +70,21 @@ The goal is to analyze how Christmas music consumption evolves over time, compar
 
 ### Visualization
 * **Streamlit** — dashboard powered by Snowflake queries  
+## 📊 Streamlit Analytics Application
+
+This project includes a Streamlit application that connects directly to Snowflake
+to consume curated Gold tables. The application queries analytical datasets using
+standard SQL and the Snowflake Python connector, providing interactive insights
+into Christmas music trends.
+
+The Streamlit app is not publicly hosted due to Snowflake account access restrictions.
+Screenshots and architectural explanations are provided below.
+
+## 🧩 Streamlit Development Workflow
+
+The Streamlit application is versioned in GitHub and connected natively to Snowflake.
+The Snowflake UI pulls the application code directly from the repository, allowing
+rapid iteration while keeping Git as the single source of truth.
 
 ### Data Source
 * **Spotify API** — artists, popularity, genres, tracks  
