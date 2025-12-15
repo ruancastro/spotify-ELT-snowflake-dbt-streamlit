@@ -33,6 +33,44 @@ The pipeline includes:
 - visualization via Streamlit
 
 ---
+## 🧠 Key Engineering Decisions
+
+- **GitHub Actions as the orchestration layer**  
+  GitHub Actions is used as the primary scheduler and CI/CD orchestrator, enabling
+  reproducible, version-controlled pipelines without introducing additional
+  workflow infrastructure.
+
+- **Cloud Run Jobs for serverless ingestion**  
+  Data ingestion is executed via Cloud Run Jobs, allowing stateless, on-demand
+  batch execution with automatic scaling and no always-on compute.
+
+- **Bronze stored immutably in GCS as the source of truth**  
+  Raw Spotify API responses are persisted as immutable JSON snapshots in GCS,
+  ensuring full reproducibility and auditability of downstream transformations.
+
+- **Snowflake as the single analytical data warehouse**  
+  Snowflake hosts all Bronze, Silver, and Gold tables and executes every
+  transformation, avoiding unnecessary data duplication across systems.
+
+- **Silver and Gold modeled as deterministic, reproducible layers**  
+  Curated layers are not exported outside Snowflake, as they can be fully
+  recomputed from Bronze, reducing storage overhead and operational complexity.
+
+- **Incremental modeling with merge semantics in Silver**  
+  Daily snapshots are deduplicated using incremental merge strategies to ensure
+  correct historical tracking while supporting late or repeated ingestions.
+
+- **Ranking logic handled at query-time in the application layer**  
+  Gold tables preserve analytical facts without hardcoded ranking filters,
+  allowing market-aware and context-specific rankings to be computed dynamically.
+
+- **Market-aware analytics to avoid post-filtered rankings**  
+  Rankings are computed per market (ALL, BR, GB) before limiting results, ensuring
+  correct analytical behavior instead of filtered subsets.
+
+- **Track-level analytics keyed by `track_id`**  
+  All time series and aggregations rely on Spotify `track_id` rather than
+  `track_name`, preventing semantic collisions between homonymous tracks.
 
 ## 🎄 Dataset Scope
 
