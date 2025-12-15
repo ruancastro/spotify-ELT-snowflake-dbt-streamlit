@@ -23,7 +23,10 @@
 > - **Durable, portable backups in GCS**  
 > - A decoupled architecture where Snowflake is the warehouse and transformation engine, while GCS provides raw ingestion and long-term durability.
 
-This project implements a modern ELT pipeline that extracts daily artist insights from the Spotify API, stores raw JSON in GCS, transforms data in Snowflake using dbt, and exposes insights through a Streamlit dashboard.
+This project implements a modern ELT pipeline that extracts daily artist insights
+from the Spotify API, stores raw JSON in GCS, transforms data in Snowflake using dbt,
+and exposes curated analytical insights through an interactive Streamlit application
+that queries Gold-layer datasets directly from Snowflake.
 
 The pipeline includes:
 
@@ -72,19 +75,30 @@ The goal is to analyze how Christmas music consumption evolves over time, compar
 * **Streamlit** — dashboard powered by Snowflake queries  
 ## 📊 Streamlit Analytics Application
 
-This project includes a Streamlit application that connects directly to Snowflake
-to consume curated Gold tables. The application queries analytical datasets using
-standard SQL and the Snowflake Python connector, providing interactive insights
-into Christmas music trends.
+This project includes an interactive Streamlit application that consumes curated
+Gold tables directly from Snowflake.
 
-The Streamlit app is not publicly hosted due to Snowflake account access restrictions.
-Screenshots and architectural explanations are provided below.
+The dashboard focuses on analytical storytelling rather than raw visualization,
+highlighting:
+- peak popularity vs popularity growth
+- market-specific rankings (ALL, BR, GB)
+- temporal evolution of track popularity
+- artist-level performance comparison
+
+All rankings are recomputed dynamically based on the selected market, ensuring
+accurate analytical behavior rather than post-filtered results.
 
 ## 🧩 Streamlit Development Workflow
 
-The Streamlit application is versioned in GitHub and connected natively to Snowflake.
-The Snowflake UI pulls the application code directly from the repository, allowing
-rapid iteration while keeping Git as the single source of truth.
+The Streamlit application is developed and versioned locally using GitHub, allowing
+a clean development experience with full IDE support.
+
+The app connects directly to Snowflake using the Python connector to query Gold-layer
+tables. The same application logic is compatible with Snowflake-native Streamlit
+deployments (via Snowpark sessions), enabling flexible execution without code changes.
+
+This approach separates development from execution concerns while keeping Snowflake
+as the single source of truth for analytics.
 
 ### Data Source
 * **Spotify API** — artists, popularity, genres, tracks  
@@ -127,10 +141,11 @@ rapid iteration while keeping Git as the single source of truth.
             └──────────────┬─────────────┘
                            │
                            ▼
-            ┌────────────────────────────┐
-            │        Streamlit App       │
-            │   Analytics & Visuals      │
-            └────────────────────────────┘
+            ────────────────────────────┐
+            │        Streamlit App      │
+            │  Interactive Analytics    │
+            │  (Gold-layer consumption) │
+            └───────────────────────────┘
 
 
 ---
@@ -196,6 +211,14 @@ This project demonstrates:
 - long-term data durability with cloud object storage backups  
 
 ---
+
+> **Data Availability Note**  
+> During the ingestion window, Brazilian artists were not returned by the Spotify API
+> on Nov 26–28, 2025. The pipeline executed successfully, but the source API returned
+> incomplete results for this market.
+>
+> The dataset intentionally preserves this behavior to reflect real-world data
+> availability and avoid artificial imputation.
 
 ## 📜 License
 This project is licensed under the **MIT License**.
