@@ -28,6 +28,8 @@ models:
       - name: market
         description: "Region/market associated with the artist."
         data_type: string
+        tests:
+          - not_null
 
       - name: popularity
         description: "Daily popularity score of the artist."
@@ -42,6 +44,7 @@ models:
         data_type: date
         tests:
           - not_null
+      
 
 
   - name: silver_tracks_daily

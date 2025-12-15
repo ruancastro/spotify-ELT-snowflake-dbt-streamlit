@@ -95,7 +95,8 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ["BR", "GB"]
+              arguments:
+                values: ['BR', 'GB']
 
       - name: avg_popularity
         description: "Average popularity of the track over the observation period."
