@@ -200,31 +200,71 @@ st.dataframe(df_growth, use_container_width=True)
 # --------------------------------------------------
 # Track Popularity Over Time
 # --------------------------------------------------
+
+
 st.subheader("📊 Track Popularity Over Time")
 
-track = st.selectbox(
-    "Select a track to explore",
-    df_popularity["TRACK_NAME"].unique()
+# --------------------------------------------------
+# Track selector (label != key)
+# --------------------------------------------------
+df_tracks = pd.read_sql(
+    """
+    SELECT DISTINCT
+        track_id,
+        track_name,
+        artist_name
+    FROM SPOTIFY.TRANSFORM_GOLD.gold_track_popularity_summary
+    WHERE (%s = 'ALL' OR market = %s)
+    ORDER BY track_name
+    """,
+    conn,
+    params=(market_filter, market_filter)
 )
 
+df_tracks["label"] = (
+    df_tracks["TRACK_NAME"] + " — " + df_tracks["ARTIST_NAME"]
+)
+
+selected_label = st.selectbox(
+    "Select a track to explore",
+    df_tracks["label"]
+)
+
+selected_track_id = df_tracks.loc[
+    df_tracks["label"] == selected_label,
+    "TRACK_ID"
+].iloc[0]
+
+# --------------------------------------------------
+# Daily popularity (track_id-based)
+# --------------------------------------------------
 df_daily = pd.read_sql(
     """
     SELECT
         record_date,
         popularity
     FROM SPOTIFY.TRANSFORM_GOLD.gold_daily_track_popularity
-    WHERE track_name = %s
+    WHERE track_id = %s
       AND (%s = 'ALL' OR market = %s)
     ORDER BY record_date
     """,
     conn,
-    params=(track, market_filter, market_filter)
+    params=(selected_track_id, market_filter, market_filter)
 )
 
+days_observed = len(df_daily)
+
+st.caption(f"📅 Observed on {days_observed} day(s)")
+
+
+# --------------------------------------------------
 # Identify peak
+# --------------------------------------------------
 peak_row = df_daily.loc[df_daily["POPULARITY"].idxmax()]
 
+# --------------------------------------------------
 # Line chart
+# --------------------------------------------------
 line = (
     alt.Chart(df_daily)
     .mark_line(point=True)
@@ -235,11 +275,16 @@ line = (
             title="Popularity",
             scale=alt.Scale(zero=False)
         ),
-        tooltip=["RECORD_DATE:T", "POPULARITY:Q"]
+        tooltip=[
+            alt.Tooltip("RECORD_DATE:T", title="Date"),
+            alt.Tooltip("POPULARITY:Q", title="Popularity")
+        ]
     )
 )
 
+# --------------------------------------------------
 # Peak marker
+# --------------------------------------------------
 peak = (
     alt.Chart(pd.DataFrame([peak_row]))
     .mark_point(size=150, color="orange")
@@ -253,7 +298,9 @@ peak = (
     )
 )
 
+# --------------------------------------------------
 # Annotation
+# --------------------------------------------------
 annotation = (
     alt.Chart(pd.DataFrame([peak_row]))
     .mark_text(
@@ -272,6 +319,7 @@ annotation = (
 chart = (line + peak + annotation).properties(height=350)
 
 st.altair_chart(chart, use_container_width=True)
+
 
 # --------------------------------------------------
 # Artist Popularity Growth Performance
