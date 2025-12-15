@@ -188,6 +188,24 @@ Snowflake produces:
 
 ---
 
+## 📚 dbt Documentation & Lineage
+
+This project leverages dbt's built-in documentation and lineage capabilities to
+ensure transparency, traceability, and data quality across the entire pipeline.
+
+All models, tests, sources, and dependencies are documented using dbt schema files.
+During each transformation run, dbt generates metadata artifacts (`manifest.json`
+and `catalog.json`) that describe:
+
+- model dependencies (Bronze → Silver → Gold)
+- column-level documentation
+- applied data quality tests
+- end-to-end lineage across layers
+
+The project uses **dbt Fusion**, which generates these artifacts during execution.
+They can be visualized via dbt Cloud or any compatible lineage/documentation viewer.
+
+
 ## 📊 Data Flow Summary
 
 1. **Extract:** Spotify → Cloud Run → GCS (raw JSON Bronze)
