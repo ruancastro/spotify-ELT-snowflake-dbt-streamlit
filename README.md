@@ -10,18 +10,14 @@
 ## 📖 Overview
 
 > **Architecture Note**  
-> This project follows a **hybrid medallion architecture** where **Snowflake is the primary data warehouse**, responsible for storing and processing all curated layers — Bronze, Silver, and Gold.  
+> This project follows a **medallion-style ELT architecture** where **Snowflake is the primary and sole analytical data warehouse**, responsible for storing and processing all curated layers — Bronze, Silver, and Gold.
 >
-> The flow operates as follows:
-> - Raw JSON data lands first in **Google Cloud Storage (GCS)** as Bronze snapshots.
-> - Snowflake ingests these Bronze files and **materializes an incremental Bronze table**.
-> - dbt transforms Bronze → Silver → Gold **inside Snowflake**, where all curated data is stored and queried.
-> - Silver & Gold are also **exported to GCS (Parquet)** only as *resilient backups* and for future portability (BigQuery, DuckDB, Databricks, Polars, etc.).
+> The architectural flow is intentionally simple and deterministic:
+> - Raw JSON data is ingested daily from the Spotify API and stored immutably in **Google Cloud Storage (GCS)** as Bronze snapshots.
+> - Snowflake ingests these snapshots and materializes an **incremental Bronze table**.
+> - dbt performs all transformations **inside Snowflake**, producing Silver (cleaned entities) and Gold (analytical aggregates).
 >
-> This ensures:
-> - **Full analytical power and long-term storage in Snowflake**  
-> - **Durable, portable backups in GCS**  
-> - A decoupled architecture where Snowflake is the warehouse and transformation engine, while GCS provides raw ingestion and long-term durability.
+> Bronze serves as the immutable source of truth, while Silver and Gold are **fully reproducible deterministic layers** stored only in Snowflake to avoid redundant persistence and unnecessary operational complexity.
 
 This project implements a modern ELT pipeline that extracts daily artist insights
 from the Spotify API, stores raw JSON in GCS, transforms data in Snowflake using dbt,
@@ -33,72 +29,82 @@ The pipeline includes:
 - serverless ingestion (Cloud Run Jobs)
 - CI/CD orchestration (GitHub Actions)
 - ELT modeling with dbt (Bronze → Silver → Gold)
-- analytics stored and computed in Snowflake
+- analytics computed and stored in Snowflake
 - visualization via Streamlit
 
 ---
 
 ## 🎄 Dataset Scope
 
-This project tracks **Christmas-related Spotify artists and their top tracks** during the **2025 holiday season**, focusing on the period from **November to December 2025**.
+This project tracks **Spotify artists and their top tracks during the 2025 Christmas season**, focusing on the period from **November to December 2025**.
 
 The dataset includes:
 
-- A curated list of **globally and Brazil-relevant Christmas artists**
+- A curated list of **globally relevant and Brazil-relevant artists during Christmas season**
 - Daily snapshots of:
   - artist popularity and follower counts
   - top tracks per artist
   - track popularity evolution over time
-- Historical tracking to capture **seasonality and popularity spikes** as Christmas approaches
+- Historical tracking to capture **seasonality and popularity dynamics** as Christmas approaches
 
-The goal is to analyze how Christmas music consumption evolves over time, compare markets (Global vs Brazil), and identify the most dominant artists and tracks during the holiday season.
+The goal is to analyze how music consumption evolves during the holiday season,
+compare market behavior (Global vs Brazil), and identify the most dominant artists
+and tracks over time.
+
+---
 
 ## ⚙️ Tech Stack
 
 ### Ingestion & Orchestration
-* **GitHub Actions** – scheduled automation + CI/CD  
-* **Cloud Run Jobs** – serverless batch ingestion  
+* **GitHub Actions** — scheduled automation + CI/CD  
+* **Cloud Run Jobs** — serverless batch ingestion  
 
 ### Storage & Warehouse
 * **Google Cloud Storage (GCS)**  
-  - Raw Bronze snapshots (JSON)  
-  - Backups of Snowflake Silver & Gold (Parquet)  
+  - Immutable Bronze snapshots (raw JSON)  
 * **Snowflake**  
   - **Primary data warehouse**
-  - Hosts Bronze, Silver, Gold tables  
-  - dbt models run directly on Snowflake compute  
+  - Hosts Bronze, Silver, and Gold tables  
+  - Executes all dbt transformations  
 
 ### Transformation
-* **dbt Core** — SQL models, lineage, tests, documentation  
+* **dbt (Fusion / Core)** — SQL models, incremental logic, tests, documentation  
 
 ### Visualization
-* **Streamlit** — dashboard powered by Snowflake queries  
+* **Streamlit** — interactive analytics powered by Snowflake queries  
+
+---
+
 ## 📊 Streamlit Analytics Application
 
-This project includes an interactive Streamlit application that consumes curated
+This project includes an interactive Streamlit dashboard that consumes curated
 Gold tables directly from Snowflake.
 
-The dashboard focuses on analytical storytelling rather than raw visualization,
-highlighting:
-- peak popularity vs popularity growth
-- market-specific rankings (ALL, BR, GB)
-- temporal evolution of track popularity
+The application focuses on **analytical storytelling**, highlighting:
+
+- most popular tracks by market
+- tracks with highest popularity growth
+- daily popularity evolution over time
 - artist-level performance comparison
 
-All rankings are recomputed dynamically based on the selected market, ensuring
-accurate analytical behavior rather than post-filtered results.
+All rankings are **computed dynamically at query time**, ensuring that market filters
+(ALL, BR, GB) produce correct results rather than post-filtered subsets.
+
+The application connects directly to Snowflake using the Python connector and is
+fully compatible with Snowflake-native Streamlit deployments if required.
+
+---
 
 ## 🧩 Streamlit Development Workflow
 
-The Streamlit application is developed and versioned locally using GitHub, allowing
+The Streamlit application is developed and versioned locally using GitHub, providing
 a clean development experience with full IDE support.
 
-The app connects directly to Snowflake using the Python connector to query Gold-layer
-tables. The same application logic is compatible with Snowflake-native Streamlit
-deployments (via Snowpark sessions), enabling flexible execution without code changes.
+The app queries Snowflake directly for all analytical data. No intermediate exports
+or materialized views outside Snowflake are required, keeping Snowflake as the single
+source of truth for analytics.
 
-This approach separates development from execution concerns while keeping Snowflake
-as the single source of truth for analytics.
+---
 
 ### Data Source
 * **Spotify API** — artists, popularity, genres, tracks  
@@ -132,13 +138,6 @@ as the single source of truth for analytics.
             │ Primary Data Warehouse + ELT Engine│
             │ Bronze → Silver → Gold             │
             └──────────────┬─────────────────────┘
-                           │ (backup export)
-                           ▼
-            ┌────────────────────────────┐
-            │ Google Cloud Storage (GCS) │
-            │ Silver + Gold Backups      │
-            │ (Parquet for portability)  │
-            └──────────────┬─────────────┘
                            │
                            ▼
             ────────────────────────────┐
@@ -147,27 +146,21 @@ as the single source of truth for analytics.
             │  (Gold-layer consumption) │
             └───────────────────────────┘
 
-
 ---
-
 ## 🚀 Pipeline Automation (GitHub Actions)
-
-This project uses two workflows for modularity and clarity.
-
----
 
 ### 1️⃣ Daily Ingestion Workflow (Spotify → GCS)
 
 Runs on schedule via GitHub Actions:
 
-- Executes Cloud Run Job
+- Executes a Cloud Run Job
 - Cloud Run container:
   - Calls Spotify API
-  - Extracts artist & track data
-  - Writes raw snapshots to GCS Bronze folder
+  - Extracts artist and track data
+  - Writes raw JSON snapshots to GCS Bronze folders
 
-Example paths: \
-`gs://<bucket>/bronze/artists/YYYY-MM-DD/snapshot.json` \
+Example paths:  
+`gs://<bucket>/bronze/artists/YYYY-MM-DD/snapshot.json`  
 `gs://<bucket>/bronze/tracks/YYYY-MM-DD/snapshot.json`
 
 ---
@@ -177,43 +170,48 @@ Example paths: \
 GitHub Actions executes:
 
 - `dbt deps`
-- `dbt run`
-- `dbt test`
+- `dbt build` (models + tests)
 
 Snowflake produces:
 
 - **Bronze**: incremental ingestion tables  
-- **Silver**: cleaned entities  
+- **Silver**: cleaned, deduplicated entities  
 - **Gold**: analytical aggregates and KPIs  
+
+All transformations and data quality tests are enforced daily via CI/CD.
 
 ---
 
 ## 📚 dbt Documentation & Lineage
 
-This project leverages dbt's built-in documentation and lineage capabilities to
-ensure transparency, traceability, and data quality across the entire pipeline.
+This project leverages dbt’s built-in documentation and lineage features to ensure
+transparency, traceability, and data quality.
 
-All models, tests, sources, and dependencies are documented using dbt schema files.
-During each transformation run, dbt generates metadata artifacts (`manifest.json`
-and `catalog.json`) that describe:
+All models, sources, and tests are documented using dbt schema files. During each
+execution, dbt generates metadata artifacts such as:
 
-- model dependencies (Bronze → Silver → Gold)
+- `manifest.json`
+- `catalog.json`
+
+These artifacts describe:
+
+- full lineage (Bronze → Silver → Gold)
 - column-level documentation
 - applied data quality tests
-- end-to-end lineage across layers
+- model dependencies
 
-The project uses **dbt Fusion**, which generates these artifacts during execution.
-They can be visualized via dbt Cloud or any compatible lineage/documentation viewer.
+The project uses **dbt Fusion**, which generates these artifacts during execution
+and allows visualization via compatible documentation and lineage tools.
 
+---
 
 ## 📊 Data Flow Summary
 
 1. **Extract:** Spotify → Cloud Run → GCS (raw JSON Bronze)
-2. **Load to Warehouse:** Snowflake loads Bronze snapshots
+2. **Load:** Snowflake ingests Bronze snapshots
 3. **Transform:** dbt on Snowflake (Bronze → Silver → Gold)
-4. **Persist:** Silver & Gold **stored in Snowflake**
-5. **Backup:** Silver & Gold **exported to GCS (Parquet)**
-6. **Visualize:** Streamlit querying Snowflake
+4. **Persist:** Silver and Gold stored in Snowflake
+5. **Visualize:** Streamlit querying Snowflake
 
 ---
 
@@ -222,11 +220,11 @@ They can be visualized via dbt Cloud or any compatible lineage/documentation vie
 This project demonstrates:
 
 - serverless ingestion on GCP  
-- ELT with Snowflake + dbt  
+- ELT pipelines with Snowflake + dbt  
 - CI/CD-driven data workflows  
-- medallion architecture in a hybrid storage pattern  
-- dashboarding via Streamlit  
-- long-term data durability with cloud object storage backups  
+- deterministic medallion architecture  
+- analytics-focused dashboarding via Streamlit  
+- real-world data variability handling  
 
 ---
 
@@ -239,4 +237,5 @@ This project demonstrates:
 > availability and avoid artificial imputation.
 
 ## 📜 License
+
 This project is licensed under the **MIT License**.
