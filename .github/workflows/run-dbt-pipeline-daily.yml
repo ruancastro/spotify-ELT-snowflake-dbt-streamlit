@@ -70,3 +70,7 @@ jobs:
       - name: Run Gold models
         run: dbt run --select tag:GOLD
         working-directory: ./dbt
+
+      - name: Run dbt tests
+        run: dbt test
+        working-directory: ./dbt
