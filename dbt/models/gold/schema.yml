@@ -56,10 +56,12 @@ models:
         data_type: integer
 
 
-  - name: gold_top_christmas_tracks
+  - name: gold_track_popularity_summary
     description: >
-      Gold table ranking Christmas tracks based on popularity metrics
-      aggregated over the analysis period.
+      Gold-level analytical table containing aggregated popularity metrics
+      for tracks over the analysis period. This table preserves one row per
+      track and is intentionally free of ranking or filtering logic, allowing
+      flexible consumption and contextual ranking at the application layer.
     config:
       materialized: table
       schema: GOLD
@@ -67,22 +69,50 @@ models:
 
     columns:
       - name: track_id
+        description: "Unique Spotify identifier for the track."
         data_type: string
+        tests:
+          - not_null
+          - unique
+
       - name: track_name
+        description: "Name of the track."
         data_type: string
+
       - name: artist_id
+        description: "Unique Spotify identifier for the artist."
         data_type: string
+        tests:
+          - not_null
+
       - name: artist_name
+        description: "Name of the artist."
         data_type: string
+
       - name: market
+        description: "Market/region associated with the artist (e.g. BR, GB)."
         data_type: string
+        tests:
+          - not_null
+          - accepted_values:
+              values: ["BR", "GB"]
+
       - name: avg_popularity
+        description: "Average popularity of the track over the observation period."
         data_type: number
+
       - name: max_popularity
+        description: "Maximum popularity reached by the track during the period."
         data_type: number
+
       - name: min_popularity
+        description: "Minimum popularity observed for the track during the period."
         data_type: number
+
       - name: popularity_growth
+        description: "Popularity growth calculated as max_popularity minus min_popularity."
         data_type: number
+
       - name: peak_date
+        description: "Date when the track reached its peak popularity."
         data_type: date

@@ -28,7 +28,6 @@ aggregated AS (
         MAX(popularity) - MIN(popularity) AS popularity_growth,
         MAX_BY(record_date, popularity) AS peak_date
     FROM track_daily
-    WHERE track_name ILIKE '%christmas%'
     GROUP BY track_id, track_name, artist_id, artist_name, market
 )
 
