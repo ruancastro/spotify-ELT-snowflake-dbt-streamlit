@@ -267,7 +267,7 @@ peak_row = df_daily.loc[df_daily["POPULARITY"].idxmax()]
 # --------------------------------------------------
 line = (
     alt.Chart(df_daily)
-    .mark_line(point=True)
+    .mark_line(point=True, color="#2ecc71")
     .encode(
         x=alt.X("RECORD_DATE:T", title="Date"),
         y=alt.Y(
@@ -275,10 +275,7 @@ line = (
             title="Popularity",
             scale=alt.Scale(zero=False)
         ),
-        tooltip=[
-            alt.Tooltip("RECORD_DATE:T", title="Date"),
-            alt.Tooltip("POPULARITY:Q", title="Popularity")
-        ]
+        tooltip=["RECORD_DATE:T", "POPULARITY:Q"]
     )
 )
 
@@ -287,7 +284,11 @@ line = (
 # --------------------------------------------------
 peak = (
     alt.Chart(pd.DataFrame([peak_row]))
-    .mark_point(size=150, color="orange")
+    .mark_point(
+        size=180,
+        color="#f1c40f",
+        filled=True
+    )
     .encode(
         x="RECORD_DATE:T",
         y="POPULARITY:Q",
@@ -305,16 +306,19 @@ annotation = (
     alt.Chart(pd.DataFrame([peak_row]))
     .mark_text(
         align="left",
-        dx=10,
-        dy=-10,
-        color="orange"
+        dx=12,
+        dy=-14,
+        color="#e74c3c",
+        fontSize=12,
+        fontWeight="bold"
     )
     .encode(
         x="RECORD_DATE:T",
         y="POPULARITY:Q",
-        text=alt.value("Peak")
+        text=alt.value("🎄 Peak")
     )
 )
+
 
 chart = (line + peak + annotation).properties(height=350)
 
@@ -379,13 +383,18 @@ df_artists = pd.read_sql(
     params=params_artists
 )
 
-chart = (
+top_artist = df_artists.loc[
+    df_artists["POPULARITY_GROWTH"].idxmax()
+]
+
+bars = (
     alt.Chart(df_artists)
-    .mark_bar()
+    .mark_bar(color="#3CB371")
     .encode(
         x=alt.X(
             "POPULARITY_GROWTH:Q",
-            title="Popularity Growth"
+            title="Popularity Growth",
+            axis=alt.Axis(grid=True)
         ),
         y=alt.Y(
             "ARTIST_NAME:N",
@@ -393,13 +402,40 @@ chart = (
             title="Artist"
         ),
         tooltip=[
-            "ARTIST_NAME",
-            "MARKET",
-            "POPULARITY_GROWTH",
-            "AVG_POPULARITY"
+            alt.Tooltip("ARTIST_NAME:N", title="Artist"),
+            alt.Tooltip("MARKET:N", title="Market"),
+            alt.Tooltip("POPULARITY_GROWTH:Q", title="Growth"),
+            alt.Tooltip("AVG_POPULARITY:Q", title="Avg Popularity")
         ]
     )
-    .properties(height=400)
 )
+
+highlight = (
+    alt.Chart(pd.DataFrame([top_artist]))
+    .mark_bar(color="#C9A227")
+    .encode(
+        x="POPULARITY_GROWTH:Q",
+        y=alt.Y("ARTIST_NAME:N", sort="-x")
+    )
+)
+
+
+annotation = (
+    alt.Chart(pd.DataFrame([top_artist]))
+    .mark_text(
+        align="left",
+        dx=8,
+        color="#C9A227",
+        fontSize=14,
+        fontWeight="bold"
+    )
+    .encode(
+        x="POPULARITY_GROWTH:Q",
+        y="ARTIST_NAME:N",
+        text=alt.value("👑")
+    )
+)
+
+chart = (bars + highlight + annotation).properties(height=400)
 
 st.altair_chart(chart, use_container_width=True)
