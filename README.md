@@ -91,6 +91,18 @@ and tracks over time.
 
 ---
 
+## 📦 Sample Data
+This repository includes small JSON samples (`data_samples/`) to illustrate
+the structure of the data ingested from the Spotify API.
+
+These files are **not used by the pipeline** and exist solely for:
+- documentation
+- easier understanding of schemas
+- code review and onboarding
+
+Production ingestion uses JSON snapshots stored in GCS.
+
+---
 ## ⚙️ Tech Stack
 
 ### Ingestion & Orchestration

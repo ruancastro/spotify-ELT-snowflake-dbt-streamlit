@@ -1,0 +1,75 @@
+[
+  {
+    "id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "name": "Mariah Carey",
+    "genres": [
+      "christmas"
+    ],
+    "followers": 12173452,
+    "popularity": 87,
+    "market": "GB"
+  },
+  {
+    "id": "5lpH0xAS4fVfLkACg9DAuM",
+    "name": "Wham!",
+    "genres": [
+      "christmas"
+    ],
+    "followers": 3199012,
+    "popularity": 81,
+    "market": "GB"
+  },
+  {
+    "id": "4cPHsZM98sKzmV26wlwD2W",
+    "name": "Brenda Lee",
+    "genres": [
+      "christmas"
+    ],
+    "followers": 484572,
+    "popularity": 80,
+    "market": "GB"
+  },
+  {
+    "id": "1GxkXlMwML1oSg5eLPiAz3",
+    "name": "Michael Bublé",
+    "genres": [
+      "christmas"
+    ],
+    "followers": 6974114,
+    "popularity": 88,
+    "market": "GB"
+  },
+  {
+    "id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "name": "Ariana Grande",
+    "genres": [
+      "pop"
+    ],
+    "followers": 108396838,
+    "popularity": 95,
+    "market": "GB"
+  },
+  {
+    "id": "0sgV4klGs1Y1dgbBi28JlD",
+    "name": "Simone",
+    "genres": [
+      "mpb",
+      "samba"
+    ],
+    "followers": 289238,
+    "popularity": 50,
+    "market": "BR"
+  },
+  {
+    "id": "7fAKtXSdNInWAIf0jVUz65",
+    "name": "Roberto Carlos",
+    "genres": [
+      "mpb",
+      "brega",
+      "bolero"
+    ],
+    "followers": 7018710,
+    "popularity": 71,
+    "market": "BR"
+  }
+]

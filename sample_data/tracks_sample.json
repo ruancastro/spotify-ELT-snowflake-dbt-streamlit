@@ -1,0 +1,492 @@
+[
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "0bYg9bo50gSsH3LtXe2SQn",
+    "track_name": "All I Want for Christmas Is You",
+    "popularity": 98,
+    "release_date": "1994-10-28"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "3PIDciSFdrQxSQSihim3hN",
+    "track_name": "Christmas (Baby Please Come Home)",
+    "popularity": 85,
+    "release_date": "1994-10-28"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "5EGPf0nqO7vEIwsOX6Er98",
+    "track_name": "Obsessed",
+    "popularity": 82,
+    "release_date": "2009-09-29"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "4EI8VuxUuIHKfafU72emqz",
+    "track_name": "We Belong Together",
+    "popularity": 78,
+    "release_date": "2005"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "3RSpK5Y0y5tl25qvssrwJ6",
+    "track_name": "My All",
+    "popularity": 78,
+    "release_date": "1997-09-16"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "6xkryXuiZU360Lngd4sx13",
+    "track_name": "Fantasy",
+    "popularity": 79,
+    "release_date": "1995-10-03"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "1f2lkuLldqRzvaFjJdjGXX",
+    "track_name": "Santa Claus Is Comin' to Town",
+    "popularity": 77,
+    "release_date": "1994-10-28"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "2VkuxjlbnbaBiWYpdBGVol",
+    "track_name": "Oh Santa! (feat. Ariana Grande & Jennifer Hudson)",
+    "popularity": 70,
+    "release_date": "2020-12-11"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "1IUtgwxLYzDVd41EgbKUjX",
+    "track_name": "All I Want For Christmas Is You (SuperFestive!) Duet with Mariah Carey",
+    "popularity": 74,
+    "release_date": "2011-01-01"
+  },
+  {
+    "artist_id": "4iHNK0tOyZPYnBU7nGAgpQ",
+    "track_id": "3B7FO3kJ5kv3mX7yiaB7sT",
+    "track_name": "O Holy Night",
+    "popularity": 76,
+    "release_date": "1994-10-28"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "2FRnf9qhLbvw8fu4IBXx78",
+    "track_name": "Last Christmas",
+    "popularity": 96,
+    "release_date": "1984-11-29"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "0ikz6tENMONtK6qGkOrU3c",
+    "track_name": "Wake Me Up Before You Go-Go",
+    "popularity": 80,
+    "release_date": "1984-10-23"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "5Qicor4jFNgZQxSf6UxEzw",
+    "track_name": "Last Christmas - Single Version",
+    "popularity": 71,
+    "release_date": "2000-09-15"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "5hXEcqQhEjfZdbIZLO8mf2",
+    "track_name": "Everything She Wants",
+    "popularity": 70,
+    "release_date": "1984-10-23"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "73OZT1XgLleDwperqGjWH4",
+    "track_name": "Last Christmas - Pudding Mix",
+    "popularity": 69,
+    "release_date": "1984-11-29"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "6tASfEUyB7lE2r6DLzURji",
+    "track_name": "Club Tropicana",
+    "popularity": 64,
+    "release_date": "1983-07-09"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "0PhU6i6Kei6x0CH3jocvA3",
+    "track_name": "Freedom",
+    "popularity": 60,
+    "release_date": "1984-10-23"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "2gG7E5OZi5D5QLRIctv63z",
+    "track_name": "I'm Your Man",
+    "popularity": 59,
+    "release_date": "1986-11-25"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "54ujCgwE4qTm8iRFmw0S5j",
+    "track_name": "Everything She Wants - Remix",
+    "popularity": 55,
+    "release_date": "1984"
+  },
+  {
+    "artist_id": "5lpH0xAS4fVfLkACg9DAuM",
+    "track_id": "5AhRNIjYPBleR1lfHphcrE",
+    "track_name": "The Edge of Heaven",
+    "popularity": 54,
+    "release_date": "1986-07-01"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "2EjXfH91m7f8HiJN1yQg97",
+    "track_name": "Rockin' Around The Christmas Tree",
+    "popularity": 96,
+    "release_date": "1964-10-19"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "09OojFvtrM9YRzRjnXqJjA",
+    "track_name": "Rockin' Around the Christmas Tree - Rerecorded Version",
+    "popularity": 75,
+    "release_date": "1991"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "6yBdCzVK3vP8uDfkLGS8E9",
+    "track_name": "I'm Sorry",
+    "popularity": 34,
+    "release_date": "2025-09-19"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "0MKnGJzNdEqOscI6xu9R3m",
+    "track_name": "Jingle Bell Rock",
+    "popularity": 69,
+    "release_date": "1964-10-19"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "6Eh1XqjaOX2BVL0hVCnwb0",
+    "track_name": "A Marshmallow World",
+    "popularity": 66,
+    "release_date": "1964-10-19"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "60jQTAr2OkFcV4SWSRz3st",
+    "track_name": "Emotions",
+    "popularity": 64,
+    "release_date": "1961-04-03"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "7xrpNuqDgFlf10X93CwixY",
+    "track_name": "Santa Claus Is Coming To Town",
+    "popularity": 61,
+    "release_date": "1964-10-19"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "5JccvAiwcZ7n3urnXqWPsG",
+    "track_name": "Break It To Me Gently",
+    "popularity": 60,
+    "release_date": "1963-09-12"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "4LJcNiq2pBb8OeqrGdBJQw",
+    "track_name": "I'm Sorry",
+    "popularity": 57,
+    "release_date": "1960-08-01"
+  },
+  {
+    "artist_id": "4cPHsZM98sKzmV26wlwD2W",
+    "track_id": "2oGrSrg08RVLHeqFH1eaHZ",
+    "track_name": "Noche Buena Y Navidad (Rockin' Around The Christmas Tree)",
+    "popularity": 56,
+    "release_date": "2024-10-25"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "3it2BvJfyhPEWF3kD2TZJ1",
+    "track_name": "It's Beginning to Look a Lot like Christmas",
+    "popularity": 90,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "6rqn19AqjcM5wgI1hCYciJ",
+    "track_name": "Holly Jolly Christmas",
+    "popularity": 88,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "5dLwdEJAFzjQbeRrDL5uzo",
+    "track_name": "Santa Claus Is Coming to Town",
+    "popularity": 81,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "0zLmRVBlZJ3IJTkChSXkBp",
+    "track_name": "White Christmas (with Shania Twain)",
+    "popularity": 79,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "27fIrMVmHLxP2Hot6qVxsy",
+    "track_name": "Christmas (Baby Please Come Home)",
+    "popularity": 79,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "47CctmFYrX4htszDZCVaLM",
+    "track_name": "Have Yourself a Merry Little Christmas",
+    "popularity": 78,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "1FZP4hpT4iuLaOb5HpriLq",
+    "track_name": "I'll Be Home for Christmas",
+    "popularity": 77,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "2rMK6uQxoSGYWOXtzPUY4Z",
+    "track_name": "Winter Wonderland",
+    "popularity": 81,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "19fbN84F5YHDyv8dyTbCO8",
+    "track_name": "Jingle Bells (feat. The Puppini Sisters)",
+    "popularity": 77,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "1GxkXlMwML1oSg5eLPiAz3",
+    "track_id": "2368r2D53RhpfIlLBHAXLl",
+    "track_name": "All I Want for Christmas Is You",
+    "popularity": 76,
+    "release_date": "2024-12-05"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "0lizgQ7Qw35od7CYaoMBZb",
+    "track_name": "Santa Tell Me",
+    "popularity": 95,
+    "release_date": "2014-11-24"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "51ZQ1vr10ffzbwIjDCwqm4",
+    "track_name": "we can't be friends (wait for your love)",
+    "popularity": 88,
+    "release_date": "2024-03-08"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "2O3MQ6H3gjrIWDcpeTrikT",
+    "track_name": "Santa, Can’t You Hear Me",
+    "popularity": 87,
+    "release_date": "2021-10-15"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "1oFAF1hdPOickyHgbuRjyX",
+    "track_name": "Save Your Tears (Remix) (with Ariana Grande) - Bonus Track",
+    "popularity": 85,
+    "release_date": "2020-03-20"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "76FZM38RC8XaAjJ77CVTNe",
+    "track_name": "Into You",
+    "popularity": 84,
+    "release_date": "2016-04-01"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "7xoUc6faLbCqZO6fQEYprd",
+    "track_name": "One Last Time",
+    "popularity": 86,
+    "release_date": "2014-08-22"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "6ocbgoVGwYJhOv1GgI9NsF",
+    "track_name": "7 rings",
+    "popularity": 86,
+    "release_date": "2019-02-08"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "44ONERBHALxftQNWq6dmyd",
+    "track_name": "Side To Side",
+    "popularity": 83,
+    "release_date": "2016-04-01"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "5J4ZkQpzMUFojo1CtAZYpn",
+    "track_name": "Love Me Harder",
+    "popularity": 84,
+    "release_date": "2014-08-22"
+  },
+  {
+    "artist_id": "66CXWjxzNUsdJxJ2JdwvnR",
+    "track_id": "3nef5W8jTkXrOKgCu4kmq7",
+    "track_name": "Dangerous Woman",
+    "popularity": 82,
+    "release_date": "2016-04-01"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "7wlVp1Tpmci5q9368PAgAN",
+    "track_name": "Então É Natal (Happy X-Mas (War Is Over))",
+    "popularity": 57,
+    "release_date": "1995-01-01"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "7rVvt8t21yAfgo4e4Cxj05",
+    "track_name": "Tô Voltando",
+    "popularity": 50,
+    "release_date": "1979-10-02"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "0gI5ZcjBZPNjojz7tvra4Z",
+    "track_name": "Natal Branco (White Christmas)",
+    "popularity": 45,
+    "release_date": "1995-01-01"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "4VCbZ9ciQbl0MuSoj7dJJz",
+    "track_name": "Primeiro Amor Primeiro",
+    "popularity": 44,
+    "release_date": "2025-12-05"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "6bVN61aMSRNMM6vYdPfM7A",
+    "track_name": "O Amanhã",
+    "popularity": 43,
+    "release_date": "1983-03-30"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "3LxJCO2o3A7awkEjTIIa84",
+    "track_name": "Luar Do Sertão",
+    "popularity": 40,
+    "release_date": "1996-01-01"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "5EEOgQdhQZkm8jkLYrF16M",
+    "track_name": "Sino De Belém (Jingle Bells)",
+    "popularity": 40,
+    "release_date": "1995-01-01"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "1CvlVbRa6qKEvS8YL8YliV",
+    "track_name": "Iolanda",
+    "popularity": 39,
+    "release_date": "1986-03-30"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "3iy0RfHjY2WPbSWrjbct32",
+    "track_name": "Começar De Novo",
+    "popularity": 38,
+    "release_date": "1979-10-02"
+  },
+  {
+    "artist_id": "0sgV4klGs1Y1dgbBi28JlD",
+    "track_id": "1mW4jT6jZvnRF1OG9nJhHy",
+    "track_name": "Procuro Olvidarte",
+    "popularity": 36,
+    "release_date": "1991-05-20"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "4lN2okBBRNDimttONXGggW",
+    "track_name": "Cama e Mesa - Versão Remasterizada",
+    "popularity": 61,
+    "release_date": "1981-04-07"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "3u2fEZexbDI4NbyVo0uF8Z",
+    "track_name": "El Gato Que Está Triste y Azul - Un Gato Nel Blu",
+    "popularity": 49,
+    "release_date": "2018-06-08"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "4tAwP9QKeLEQJ2fgd1RWcY",
+    "track_name": "Detalles (Detalhes)",
+    "popularity": 65,
+    "release_date": "1964"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "4xPCCOWBjSk9cLTGUWO5Ro",
+    "track_name": "Amigo",
+    "popularity": 46,
+    "release_date": "2007"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "5oTM0Xt2LS1ouJJuVkwJql",
+    "track_name": "Que Será de Ti (Como Vai Você)",
+    "popularity": 56,
+    "release_date": "2007"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "7oC2VUenqewyHV9q2hjlXk",
+    "track_name": "Esse Cara Sou Eu",
+    "popularity": 58,
+    "release_date": "2012-04-07"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "1EjTQ72d5YuDI3yD3n5e4a",
+    "track_name": "Amada Amante",
+    "popularity": 59,
+    "release_date": "1964"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "5C7wTCd20Ftl6bbW70qOA4",
+    "track_name": "Amante a la Antigua",
+    "popularity": 51,
+    "release_date": "2007"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "5ozoh29XLjZ3DVbCqYePp7",
+    "track_name": "Lady Laura - Versão Remasterizada",
+    "popularity": 54,
+    "release_date": "1978-04-07"
+  },
+  {
+    "artist_id": "7fAKtXSdNInWAIf0jVUz65",
+    "track_id": "2jF1EOUMsIMMHIB4ktji6W",
+    "track_name": "Cóncavo y Convexo (O Côncavo e o Convexo)",
+    "popularity": 58,
+    "release_date": "2007"
+  }
+]
