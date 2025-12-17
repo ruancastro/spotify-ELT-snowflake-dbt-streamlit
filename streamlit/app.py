@@ -2,18 +2,14 @@ import streamlit as st
 import pandas as pd
 from snowflake_connection import get_connection
 import altair as alt
+
 # --------------------------------------------------
 # Page config
 # --------------------------------------------------
-st.set_page_config(
-    page_title="🎄 Spotify Christmas Analytics",
-    layout="wide"
-)
+st.set_page_config(page_title="🎄 Spotify Christmas Analytics", layout="wide")
 
 st.title("🎄 Spotify Christmas Music Analytics")
-st.caption(
-    "Analysis of Christmas-related artists and tracks during Nov–Dec 2025"
-)
+st.caption("Analysis of Christmas-related artists and tracks during Nov–Dec 2025")
 
 # --------------------------------------------------
 # Snowflake connection
@@ -25,11 +21,7 @@ conn = get_connection()
 # --------------------------------------------------
 st.subheader("🌍 Market Filter")
 
-market_filter = st.radio(
-    "Select market",
-    ["ALL", "BR", "GB"],
-    horizontal=True
-)
+market_filter = st.radio("Select market", ["ALL", "BR", "GB"], horizontal=True)
 
 # --------------------------------------------------
 # Summary ingestion metrics
@@ -47,17 +39,14 @@ kpis = pd.read_sql(
     WHERE (%s = 'ALL' OR market = %s)
     """,
     conn,
-    params=(market_filter, market_filter)
+    params=(market_filter, market_filter),
 )
 
 kpi_row = kpis.iloc[0]
 
 col1.metric("🎵 Tracks Analyzed", int(kpi_row["TOTAL_TRACKS"]))
 col2.metric("🎤 Artists Analyzed", int(kpi_row["TOTAL_ARTISTS"]))
-col3.metric(
-    "📅 Last Update",
-    kpi_row["LAST_UPDATE"].strftime("%Y-%m-%d")
-)
+col3.metric("📅 Last Update", kpi_row["LAST_UPDATE"].strftime("%Y-%m-%d"))
 col4.metric("📊 Days Tracked", int(kpi_row["DAYS_TRACKED"]))
 
 # --------------------------------------------------
@@ -120,11 +109,7 @@ else:
     """
     params_popularity = (market_filter,)
 
-df_popularity = pd.read_sql(
-    query_popularity,
-    conn,
-    params=params_popularity
-)
+df_popularity = pd.read_sql(query_popularity, conn, params=params_popularity)
 
 st.dataframe(df_popularity, use_container_width=True)
 
@@ -189,11 +174,7 @@ else:
     """
     params_growth = (market_filter,)
 
-df_growth = pd.read_sql(
-    query_growth,
-    conn,
-    params=params_growth
-)
+df_growth = pd.read_sql(query_growth, conn, params=params_growth)
 
 st.dataframe(df_growth, use_container_width=True)
 
@@ -218,21 +199,15 @@ df_tracks = pd.read_sql(
     ORDER BY track_name
     """,
     conn,
-    params=(market_filter, market_filter)
+    params=(market_filter, market_filter),
 )
 
-df_tracks["label"] = (
-    df_tracks["TRACK_NAME"] + " — " + df_tracks["ARTIST_NAME"]
-)
+df_tracks["label"] = df_tracks["TRACK_NAME"] + " — " + df_tracks["ARTIST_NAME"]
 
-selected_label = st.selectbox(
-    "Select a track to explore",
-    df_tracks["label"]
-)
+selected_label = st.selectbox("Select a track to explore", df_tracks["label"])
 
 selected_track_id = df_tracks.loc[
-    df_tracks["label"] == selected_label,
-    "TRACK_ID"
+    df_tracks["label"] == selected_label, "TRACK_ID"
 ].iloc[0]
 
 # --------------------------------------------------
@@ -249,7 +224,7 @@ df_daily = pd.read_sql(
     ORDER BY record_date
     """,
     conn,
-    params=(selected_track_id, market_filter, market_filter)
+    params=(selected_track_id, market_filter, market_filter),
 )
 
 days_observed = len(df_daily)
@@ -270,12 +245,8 @@ line = (
     .mark_line(point=True, color="#2ecc71")
     .encode(
         x=alt.X("RECORD_DATE:T", title="Date"),
-        y=alt.Y(
-            "POPULARITY:Q",
-            title="Popularity",
-            scale=alt.Scale(zero=False)
-        ),
-        tooltip=["RECORD_DATE:T", "POPULARITY:Q"]
+        y=alt.Y("POPULARITY:Q", title="Popularity", scale=alt.Scale(zero=False)),
+        tooltip=["RECORD_DATE:T", "POPULARITY:Q"],
     )
 )
 
@@ -284,18 +255,14 @@ line = (
 # --------------------------------------------------
 peak = (
     alt.Chart(pd.DataFrame([peak_row]))
-    .mark_point(
-        size=180,
-        color="#f1c40f",
-        filled=True
-    )
+    .mark_point(size=180, color="#f1c40f", filled=True)
     .encode(
         x="RECORD_DATE:T",
         y="POPULARITY:Q",
         tooltip=[
             alt.Tooltip("RECORD_DATE:T", title="Peak Date"),
-            alt.Tooltip("POPULARITY:Q", title="Peak Popularity")
-        ]
+            alt.Tooltip("POPULARITY:Q", title="Peak Popularity"),
+        ],
     )
 )
 
@@ -305,18 +272,9 @@ peak = (
 annotation = (
     alt.Chart(pd.DataFrame([peak_row]))
     .mark_text(
-        align="left",
-        dx=12,
-        dy=-14,
-        color="#e74c3c",
-        fontSize=12,
-        fontWeight="bold"
+        align="left", dx=12, dy=-14, color="#e74c3c", fontSize=12, fontWeight="bold"
     )
-    .encode(
-        x="RECORD_DATE:T",
-        y="POPULARITY:Q",
-        text=alt.value("🎄 Peak")
-    )
+    .encode(x="RECORD_DATE:T", y="POPULARITY:Q", text=alt.value("🎄 Peak"))
 )
 
 
@@ -377,63 +335,38 @@ else:
     """
     params_artists = (market_filter,)
 
-df_artists = pd.read_sql(
-    query_artists,
-    conn,
-    params=params_artists
-)
+df_artists = pd.read_sql(query_artists, conn, params=params_artists)
 
-top_artist = df_artists.loc[
-    df_artists["POPULARITY_GROWTH"].idxmax()
-]
+top_artist = df_artists.loc[df_artists["POPULARITY_GROWTH"].idxmax()]
 
 bars = (
     alt.Chart(df_artists)
     .mark_bar(color="#3CB371")
     .encode(
         x=alt.X(
-            "POPULARITY_GROWTH:Q",
-            title="Popularity Growth",
-            axis=alt.Axis(grid=True)
+            "POPULARITY_GROWTH:Q", title="Popularity Growth", axis=alt.Axis(grid=True)
         ),
-        y=alt.Y(
-            "ARTIST_NAME:N",
-            sort="-x",
-            title="Artist"
-        ),
+        y=alt.Y("ARTIST_NAME:N", sort="-x", title="Artist"),
         tooltip=[
             alt.Tooltip("ARTIST_NAME:N", title="Artist"),
             alt.Tooltip("MARKET:N", title="Market"),
             alt.Tooltip("POPULARITY_GROWTH:Q", title="Growth"),
-            alt.Tooltip("AVG_POPULARITY:Q", title="Avg Popularity")
-        ]
+            alt.Tooltip("AVG_POPULARITY:Q", title="Avg Popularity"),
+        ],
     )
 )
 
 highlight = (
     alt.Chart(pd.DataFrame([top_artist]))
     .mark_bar(color="#C9A227")
-    .encode(
-        x="POPULARITY_GROWTH:Q",
-        y=alt.Y("ARTIST_NAME:N", sort="-x")
-    )
+    .encode(x="POPULARITY_GROWTH:Q", y=alt.Y("ARTIST_NAME:N", sort="-x"))
 )
 
 
 annotation = (
     alt.Chart(pd.DataFrame([top_artist]))
-    .mark_text(
-        align="left",
-        dx=8,
-        color="#C9A227",
-        fontSize=14,
-        fontWeight="bold"
-    )
-    .encode(
-        x="POPULARITY_GROWTH:Q",
-        y="ARTIST_NAME:N",
-        text=alt.value("👑")
-    )
+    .mark_text(align="left", dx=8, color="#C9A227", fontSize=14, fontWeight="bold")
+    .encode(x="POPULARITY_GROWTH:Q", y="ARTIST_NAME:N", text=alt.value("👑"))
 )
 
 chart = (bars + highlight + annotation).properties(height=400)

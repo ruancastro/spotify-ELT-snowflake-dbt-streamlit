@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
-load_dotenv(dotenv_path=Path(__file__).parent.parent / 'snowflake.env')
+load_dotenv(dotenv_path=Path(__file__).parent.parent / "snowflake.env")
+
 
 def get_connection():
     return snowflake.connector.connect(
@@ -15,6 +16,7 @@ def get_connection():
         database=os.getenv("SNOWFLAKE_DATABASE", "SPOTIFY"),
         schema=os.getenv("SNOWFLAKE_SCHEMA", "GOLD"),
     )
+
 
 if __name__ == "__main__":
     conn = get_connection()
