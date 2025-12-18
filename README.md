@@ -130,18 +130,38 @@ Production ingestion uses JSON snapshots stored in GCS.
 This project includes an interactive Streamlit dashboard that consumes curated
 Gold tables directly from Snowflake.
 
-The application focuses on **analytical storytelling**, highlighting:
+The application focuses on analytical storytelling, highlighting:
 
 - most popular tracks by market
 - tracks with highest popularity growth
 - daily popularity evolution over time
 - artist-level performance comparison
 
-All rankings are **computed dynamically at query time**, ensuring that market filters
-(ALL, BR, GB) produce correct results rather than post-filtered subsets.
+All rankings are computed dynamically at query time, ensuring correct
+market-aware analytics.
 
-The application connects directly to Snowflake using the Python connector and is
-fully compatible with Snowflake-native Streamlit deployments if required.
+---
+
+### 🖥️ Dashboard Preview
+
+![Streamlit Dashboard](assets/streamlit_dashboard.png)
+
+> The dashboard is not publicly accessible due to Snowflake account restrictions.
+> A full walkthrough and architectural explanation are provided in the video below.
+
+---
+
+### 🎥 Project Walkthrough Video
+
+📺 **YouTube:** `<link>`  
+
+The video covers:
+- end-to-end pipeline architecture
+- ingestion and orchestration decisions
+- dbt modeling strategy
+- analytical design choices
+- Streamlit dashboard walkthrough
+
 
 ---
 
