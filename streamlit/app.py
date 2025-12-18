@@ -359,7 +359,13 @@ bars = (
 highlight = (
     alt.Chart(pd.DataFrame([top_artist]))
     .mark_bar(color="#C9A227")
-    .encode(x="POPULARITY_GROWTH:Q", y=alt.Y("ARTIST_NAME:N", sort="-x"))
+    .encode(x="POPULARITY_GROWTH:Q", y=alt.Y("ARTIST_NAME:N", sort="-x"),
+    tooltip=[
+        alt.Tooltip("ARTIST_NAME:N", title="Artist"),
+        alt.Tooltip("MARKET:N", title="Market"),
+        alt.Tooltip("POPULARITY_GROWTH:Q", title="Growth"),
+        alt.Tooltip("AVG_POPULARITY:Q", title="Avg Popularity"),
+    ])
 )
 
 
