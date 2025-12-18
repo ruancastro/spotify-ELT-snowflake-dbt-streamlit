@@ -211,7 +211,9 @@ top_track = pd.read_sql(
         track_id
     FROM SPOTIFY.TRANSFORM_GOLD.gold_track_popularity_summary
     WHERE (%s = 'ALL' OR market = %s)
-    ORDER BY popularity_growth DESC
+    ORDER BY
+        popularity_growth DESC,
+        max_popularity DESC
     LIMIT 1
     """,
     conn,
