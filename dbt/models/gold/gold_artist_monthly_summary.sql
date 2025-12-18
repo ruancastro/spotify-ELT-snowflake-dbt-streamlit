@@ -15,7 +15,7 @@ aggregated AS (
         artist_id,
         artist_name,
         market,
-        AVG(popularity)  AS avg_popularity,
+        ROUND(AVG(popularity), 2)  AS avg_popularity,
         MAX(popularity)  AS max_popularity,
         MIN(popularity)  AS min_popularity,
         MAX(popularity) - MIN(popularity) AS popularity_growth,
