@@ -204,7 +204,31 @@ df_tracks = pd.read_sql(
 
 df_tracks["label"] = df_tracks["TRACK_NAME"] + " — " + df_tracks["ARTIST_NAME"]
 
-selected_label = st.selectbox("Select a track to explore", df_tracks["label"])
+# Get top growing track for default selection
+top_track = pd.read_sql(
+    """
+    SELECT
+        track_id
+    FROM SPOTIFY.TRANSFORM_GOLD.gold_track_popularity_summary
+    WHERE (%s = 'ALL' OR market = %s)
+    ORDER BY popularity_growth DESC
+    LIMIT 1
+    """,
+    conn,
+    params=(market_filter, market_filter),
+)
+
+default_track_id = top_track.iloc[0]["TRACK_ID"]
+
+default_index = df_tracks.index[df_tracks["TRACK_ID"] == default_track_id].tolist()
+
+default_index = default_index[0] if default_index else 0
+
+selected_label = st.selectbox(
+    "Select a track to explore",
+    df_tracks["label"],
+    index=default_index,
+)
 
 selected_track_id = df_tracks.loc[
     df_tracks["label"] == selected_label, "TRACK_ID"
@@ -359,13 +383,16 @@ bars = (
 highlight = (
     alt.Chart(pd.DataFrame([top_artist]))
     .mark_bar(color="#C9A227")
-    .encode(x="POPULARITY_GROWTH:Q", y=alt.Y("ARTIST_NAME:N", sort="-x"),
-    tooltip=[
-        alt.Tooltip("ARTIST_NAME:N", title="Artist"),
-        alt.Tooltip("MARKET:N", title="Market"),
-        alt.Tooltip("POPULARITY_GROWTH:Q", title="Growth"),
-        alt.Tooltip("AVG_POPULARITY:Q", title="Avg Popularity"),
-    ])
+    .encode(
+        x="POPULARITY_GROWTH:Q",
+        y=alt.Y("ARTIST_NAME:N", sort="-x"),
+        tooltip=[
+            alt.Tooltip("ARTIST_NAME:N", title="Artist"),
+            alt.Tooltip("MARKET:N", title="Market"),
+            alt.Tooltip("POPULARITY_GROWTH:Q", title="Growth"),
+            alt.Tooltip("AVG_POPULARITY:Q", title="Avg Popularity"),
+        ],
+    )
 )
 
 
