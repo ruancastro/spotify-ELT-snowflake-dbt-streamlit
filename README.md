@@ -33,6 +33,44 @@ The pipeline includes:
 - visualization via Streamlit
 
 ---
+
+## 🧩 Architecture
+
+            ┌────────────────────────────┐
+            │        GitHub Actions      │
+            │   Daily orchestration      │
+            └──────────────┬─────────────┘
+                           │
+                     (cron trigger)
+                           │
+                           ▼
+            ┌────────────────────────────┐
+            │       Cloud Run Job        │
+            │   Python ingestion script  │
+            └──────────────┬─────────────┘
+                           │
+                           ▼
+            ┌────────────────────────────┐
+            │ Google Cloud Storage (GCS) │
+            │ Bronze - Raw JSON          │
+            └──────────────┬─────────────┘
+                           │
+                           ▼
+            ┌────────────────────────────────────┐
+            │        Snowflake + dbt             │
+            │ Primary Data Warehouse + ELT Engine│
+            │ Bronze → Silver → Gold             │
+            └──────────────┬─────────────────────┘
+                           │
+                           ▼
+            ────────────────────────────┐
+            │        Streamlit App      │
+            │  Interactive Analytics    │
+            │  (Gold-layer consumption) │
+            └───────────────────────────┘
+
+---
+
 ## 🧠 Key Engineering Decisions
 
 - **GitHub Actions as the orchestration layer**  
@@ -123,100 +161,12 @@ Production ingestion uses JSON snapshots stored in GCS.
 ### Visualization
 * **Streamlit** — interactive analytics powered by Snowflake queries  
 
----
-
-## 📊 Streamlit Analytics Application
-
-This project includes an interactive Streamlit dashboard that consumes curated
-Gold tables directly from Snowflake.
-
-The application focuses on analytical storytelling, highlighting:
-
-- most popular tracks by market
-- tracks with highest popularity growth
-- daily popularity evolution over time
-- artist-level performance comparison
-
-All rankings are computed dynamically at query time, ensuring correct
-market-aware analytics.
-
----
-
-### 🖥️ Dashboard Preview
-
-![Streamlit Dashboard](assets/streamlit_dashboard.png)
-
-> The dashboard is not publicly accessible due to Snowflake account restrictions.
-> A full walkthrough and architectural explanation are provided in the video below.
-
----
-
-### 🎥 Project Walkthrough Video
-
-📺 **YouTube:** `<link>`  
-
-The video covers:
-- end-to-end pipeline architecture
-- ingestion and orchestration decisions
-- dbt modeling strategy
-- analytical design choices
-- Streamlit dashboard walkthrough
-
-
----
-
-## 🧩 Streamlit Development Workflow
-
-The Streamlit application is developed and versioned locally using GitHub, providing
-a clean development experience with full IDE support.
-
-The app queries Snowflake directly for all analytical data. No intermediate exports
-or materialized views outside Snowflake are required, keeping Snowflake as the single
-source of truth for analytics.
-
----
-
 ### Data Source
 * **Spotify API** — artists, popularity, genres, tracks  
 
 ---
 
-## 🧩 Architecture
 
-            ┌────────────────────────────┐
-            │        GitHub Actions      │
-            │   Daily orchestration      │
-            └──────────────┬─────────────┘
-                           │
-                     (cron trigger)
-                           │
-                           ▼
-            ┌────────────────────────────┐
-            │       Cloud Run Job        │
-            │   Python ingestion script  │
-            └──────────────┬─────────────┘
-                           │
-                           ▼
-            ┌────────────────────────────┐
-            │ Google Cloud Storage (GCS) │
-            │ Bronze - Raw JSON          │
-            └──────────────┬─────────────┘
-                           │
-                           ▼
-            ┌────────────────────────────────────┐
-            │        Snowflake + dbt             │
-            │ Primary Data Warehouse + ELT Engine│
-            │ Bronze → Silver → Gold             │
-            └──────────────┬─────────────────────┘
-                           │
-                           ▼
-            ────────────────────────────┐
-            │        Streamlit App      │
-            │  Interactive Analytics    │
-            │  (Gold-layer consumption) │
-            └───────────────────────────┘
-
----
 ## 🚀 Pipeline Automation (GitHub Actions)
 
 ### 1️⃣ Daily Ingestion Workflow (Spotify → GCS)
@@ -254,24 +204,24 @@ All transformations and data quality tests are enforced daily via CI/CD.
 
 ## 📚 dbt Documentation & Lineage
 
-This project leverages dbt’s built-in documentation and lineage features to ensure
-transparency, traceability, and data quality.
+This project leverages dbt’s built-in documentation and lineage capabilities
+to ensure transparency, traceability, and data quality during development
+and execution.
 
 All models, sources, and tests are documented using dbt schema files. During each
-execution, dbt generates metadata artifacts such as:
-
-- `manifest.json`
-- `catalog.json`
-
-These artifacts describe:
+run, dbt generates metadata artifacts such as `manifest.json` and `catalog.json`,
+which describe:
 
 - full lineage (Bronze → Silver → Gold)
 - column-level documentation
 - applied data quality tests
 - model dependencies
 
-The project uses **dbt Fusion**, which generates these artifacts during execution
-and allows visualization via compatible documentation and lineage tools.
+These artifacts are generated at execution time and are typically consumed
+locally or in CI environments rather than committed to version control.
+
+The project uses **dbt Fusion**, which produces these artifacts automatically
+as part of the build process.
 
 ---
 
@@ -282,6 +232,54 @@ and allows visualization via compatible documentation and lineage tools.
 3. **Transform:** dbt on Snowflake (Bronze → Silver → Gold)
 4. **Persist:** Silver and Gold stored in Snowflake
 5. **Visualize:** Streamlit querying Snowflake
+
+---
+## 📊 Streamlit Analytics Application
+
+This project includes an interactive Streamlit dashboard that consumes curated
+Gold tables directly from Snowflake.
+
+The application focuses on analytical storytelling, highlighting:
+
+- most popular tracks by market
+- tracks with highest popularity growth
+- daily popularity evolution over time
+- artist-level performance comparison
+
+All rankings are computed dynamically at query time, ensuring correct
+market-aware analytics.
+
+### 🖥️ Dashboard Preview
+
+![Streamlit Dashboard](assets/streamlit_dashboard.png)
+
+> The dashboard is not publicly accessible due to Snowflake account restrictions.
+> A full walkthrough and architectural explanation are provided in the video below.
+
+---
+
+### 🎥 Project Walkthrough Video
+
+📺 **YouTube:** `<link>`  
+
+The video covers:
+- end-to-end pipeline architecture
+- ingestion and orchestration decisions
+- dbt modeling strategy
+- analytical design choices
+- Streamlit dashboard walkthrough
+
+
+---
+
+## 🧩 Streamlit Development Workflow
+
+The Streamlit application is developed and versioned locally using GitHub, providing
+a clean development experience with full IDE support.
+
+The app queries Snowflake directly for all analytical data. No intermediate exports
+or materialized views outside Snowflake are required, keeping Snowflake as the single
+source of truth for analytics.
 
 ---
 
