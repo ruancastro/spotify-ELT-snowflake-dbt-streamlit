@@ -72,12 +72,12 @@ if market_filter == "ALL":
             avg_popularity,
             peak_date,
             ROW_NUMBER() OVER (
-                ORDER BY max_popularity DESC
+                ORDER BY max_popularity DESC, avg_popularity DESC
             ) AS rn
         FROM SPOTIFY.TRANSFORM_GOLD.gold_track_popularity_summary
     )
     WHERE rn <= 10
-    ORDER BY max_popularity DESC
+    ORDER BY max_popularity DESC, avg_popularity DESC
     """
     params_popularity = ()
 else:
@@ -99,13 +99,13 @@ else:
             peak_date,
             ROW_NUMBER() OVER (
                 PARTITION BY market
-                ORDER BY max_popularity DESC
+                ORDER BY max_popularity DESC, avg_popularity DESC
             ) AS rn
         FROM SPOTIFY.TRANSFORM_GOLD.gold_track_popularity_summary
         WHERE market = %s
     )
     WHERE rn <= 10
-    ORDER BY max_popularity DESC
+    ORDER BY max_popularity DESC, avg_popularity DESC
     """
     params_popularity = (market_filter,)
 
@@ -137,12 +137,12 @@ if market_filter == "ALL":
             max_popularity,
             peak_date,
             ROW_NUMBER() OVER (
-                ORDER BY popularity_growth DESC
+                ORDER BY popularity_growth DESC, max_popularity DESC
             ) AS rn
         FROM SPOTIFY.TRANSFORM_GOLD.gold_track_popularity_summary
     )
     WHERE rn <= 10
-    ORDER BY popularity_growth DESC
+    ORDER BY popularity_growth DESC, max_popularity DESC
     """
     params_growth = ()
 else:
@@ -164,13 +164,13 @@ else:
             peak_date,
             ROW_NUMBER() OVER (
                 PARTITION BY market
-                ORDER BY popularity_growth DESC
+                ORDER BY popularity_growth DESC, max_popularity DESC
             ) AS rn
         FROM SPOTIFY.TRANSFORM_GOLD.gold_track_popularity_summary
         WHERE market = %s
     )
     WHERE rn <= 10
-    ORDER BY popularity_growth DESC
+    ORDER BY popularity_growth DESC, max_popularity DESC
     """
     params_growth = (market_filter,)
 
