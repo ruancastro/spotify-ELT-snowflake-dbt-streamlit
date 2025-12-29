@@ -260,7 +260,7 @@ market-aware analytics.
 
 ### 🎥 Project Walkthrough Video
 
-📺 **YouTube:** `<link>`  
+**YouTube:** [Spotify ELT Data Pipeline | Snowflake, dbt, GCP & Streamlit](https://youtu.be/1SKWMvZhUNE)
 
 The video covers:
 - end-to-end pipeline architecture
